@@ -1,0 +1,387 @@
+enum NotificationType {
+    NEW_COMMENT
+    NEW_POSTLIKE
+    NEW_REPLY
+    NEW_COMMENTLIKE
+    NEW_REPLYLIKE
+    NEW_KEYWORD
+    NEW_REAL_ESTATE_COMMENT
+    NEW_REAL_ESTATE_REPLY
+    NEW_REAL_ESTATE_POST_LIKE
+}
+
+type Notification @model @auth(rules: [{allow: public}]) {
+    id: ID!
+    userID: ID! @index(name: "byUser")
+    targetUser: User @belongsTo(fields: ["userID"])
+    type: NotificationType!
+    isRead: Boolean!
+    message: String
+    targetPost: Post @hasOne
+    targetRealEstatePost: RealEstatePost @hasOne
+    triggerUserID: ID! @index(name: "byTriggerUser")
+    triggerUser: User @belongsTo(fields: ["triggerUserID"])
+}
+
+type MainCategory @model @auth(rules: [{allow: public}]) {
+    id: ID!
+    title: String!
+    sortNum: Int!
+    type: MainCategoryType!
+    subCategories: [SubCategory] @hasMany(indexName: "byMainCategory", fields: ["id"])
+}
+
+type PostLike @model @auth(rules: [{allow: public}]) {
+    id: ID!
+    postID: ID! @index(name: "byPost")
+    userID: ID! @index(name: "byUser")
+    post: Post @belongsTo(fields: ["postID"])
+    user: User @belongsTo(fields: ["userID"])
+}
+
+type CommentLike @model @auth(rules: [{allow: public}]) {
+    id: ID!
+    commentID: ID! @index(name: "byComment")
+    userID: ID! @index(name: "byUser")
+    comment: Comment @belongsTo(fields: ["commentID"])
+    user: User @belongsTo(fields: ["userID"])
+}
+
+type ReplyLike @model @auth(rules: [{allow: public}]) {
+    id: ID!
+    replyID: ID! @index(name: "byReply")
+    userID: ID! @index(name: "byUser")
+    reply: Reply @belongsTo(fields: ["replyID"])
+    user: User @belongsTo(fields: ["userID"])
+}
+
+type PostRead @model @auth(rules: [{allow: public}]) {
+    id: ID!
+    postID: ID! @index(name: "byPost")
+    userID: ID! @index(name: "byUser")
+    post: Post @belongsTo(fields: ["postID"])
+    user: User @belongsTo(fields: ["userID"])
+}
+
+type Reply @model @auth(rules: [{allow: public}]) {
+    id: ID!
+    content: String!
+    userID: ID! @index(name: "byUser")
+    commentID: ID! @index(name: "byComment")
+    comment: Comment @belongsTo(fields: ["commentID"])
+    authorUser: User @belongsTo(fields: ["userID"])
+    likes: [ReplyLike] @hasMany(indexName: "byReply", fields: ["id"])
+    reportsReceived: [Report] @hasMany(indexName: "byReportedReply", fields: ["id"])
+}
+
+type Comment @model @auth(rules: [{allow: public}]) {
+    id: ID!
+    content: String!
+    postID: ID @index(name: "byPost")
+    userID: ID! @index(name: "byUser")
+    replies: [Reply] @hasMany(indexName: "byComment", fields: ["id"])
+    post: Post @belongsTo(fields: ["postID"])
+    authorUser: User @belongsTo(fields: ["userID"])
+    likes: [CommentLike] @hasMany(indexName: "byComment", fields: ["id"])
+    reportsReceived: [Report] @hasMany(indexName: "byReportedComment", fields: ["id"])
+}
+
+type SubCategory @model @auth(rules: [{allow: public}]) {
+    id: ID!
+    name: String!
+    title: String!
+    emoji: String
+    mainCategoryType: MainCategoryType!
+    sortNum: Int!
+    mainCategoryID: ID! @index(name: "byMainCategory")
+    mainCategory: MainCategory @belongsTo(fields: ["mainCategoryID"])
+    posts: [Post] @hasMany(indexName: "bySubCategory", fields: ["id"])
+}
+
+type Post @model @auth(rules: [{allow: public}]) {
+    id: ID!
+    title: String!
+    content: String!
+    price: Int
+    currency: String
+    status: String @index(name: "byCreatedAt", sortKeyFields: ["createdAt"])
+    createdAt: AWSDateTime!
+    isNegotiable: Boolean
+    imageKeys: [String]
+    mainCategoryType: MainCategoryType!
+    userID: ID! @index(name: "byUser")
+    subCategoryID: ID! @index(name: "bySubCategory")
+    authorUser: User @belongsTo(fields: ["userID"])
+    subCategory: SubCategory @belongsTo(fields: ["subCategoryID"])
+    comments: [Comment] @hasMany(indexName: "byPost", fields: ["id"])
+    likes: [PostLike] @hasMany(indexName: "byPost", fields: ["id"])
+    reads: [PostRead] @hasMany(indexName: "byPost", fields: ["id"])
+    reportsReceived: [Report] @hasMany(indexName: "byReportedPost", fields: ["id"])
+
+    cityID: ID! @index(name: "byCity")
+    city: City @belongsTo(fields: ["cityID"])
+
+    countryID: ID! @index(name: "byCountry")
+    country: Country @belongsTo(fields: ["countryID"])
+}
+
+
+type User @model @searchable @auth(rules: [{allow: public}]) {
+    id: ID!
+    userName: String!
+    phone: String!
+    imageKey: String
+    devicePlatform: DevicePlatform!
+    deviceToken: String!
+    isCompletelyRegistered: Boolean!
+    createdPosts: [Post] @hasMany(indexName: "byUser", fields: ["id"])
+    createdComments: [Comment] @hasMany(indexName: "byUser", fields: ["id"])
+    createdReplies: [Reply] @hasMany(indexName: "byUser", fields: ["id"])
+    postLikes: [PostLike] @hasMany(indexName: "byUser", fields: ["id"])
+    commentLikes: [CommentLike] @hasMany(indexName: "byUser", fields: ["id"])
+    replyLikes: [ReplyLike] @hasMany(indexName: "byUser", fields: ["id"])
+    realEstatePostLikes: [RealEstatePostLike] @hasMany(indexName: "byUser", fields: ["id"])
+    postReads: [PostRead] @hasMany(indexName: "byUser", fields: ["id"])
+    notifications: [Notification] @hasMany(indexName: "byUser", fields: ["id"])
+    keywords: [Keyword] @hasMany(indexName: "byUser", fields: ["id"])
+    createdRealEstatePosts: [RealEstatePost] @hasMany(indexName: "byUser", fields: ["id"])
+    createdRealEstateComments: [RealEstateComment] @hasMany(indexName: "byUser", fields: ["id"])
+    createdRealEstateReplies: [RealEstateReply] @hasMany(indexName: "byUser", fields: ["id"])
+    reportsReceived: [Report] @hasMany(indexName: "byReportedUser", fields: ["id"])
+    reportsSent: [Report] @hasMany(indexName: "byReporter", fields: ["id"])
+    cityID: ID! @index(name: "byCity")
+    city: City @belongsTo(fields: ["cityID"])
+}
+
+enum DevicePlatform {
+    IOS
+    ANDROID
+}
+
+type Keyword @model @auth(rules: [{allow: public}]) {
+    id: ID!
+    keyword: String!
+    userID: ID! @index(name: "byUser")
+    user: User @belongsTo(fields: ["userID"])
+}
+
+type Subscription {
+    onCreateNotificationById(userID: ID!): Notification @aws_subscribe(mutations: ["createNotification"])
+}
+
+enum MainCategoryType {
+    ALL
+    COMMUNITY
+    MARKETPLACE
+    REAL_ESTATE
+}
+
+type AppVersionInfo @model @auth(rules: [{allow: public}]) {
+    id: ID!
+    version: String!
+    forceUpdate: Boolean!
+    updateMessage: String!
+}
+
+type PublicNotice @model @auth(rules: [{allow: public}]) {
+    id: ID!
+    title: String!
+    content: String!
+    sortNum: Int!
+}
+
+type RealEstatePost @model @auth(rules: [{allow: public}]) {
+    id: ID!
+    status : RealEstateStatus!
+    currency: String!
+    deposit: Int!
+    imageKeys: [String]!
+    itemCode: String!
+    mainCategoryType: MainCategoryType!
+    availableFrom: String!
+    approximateLocation: String!
+    typeOfBuilding: String!
+    type: BuildingType!
+    sizeM2: Int!
+    usingFloors: Int!
+    entireFloors: Int!
+    numberOfRooms: Int!
+    numberOfRestrooms: Int!
+    monthlyRent: Float!
+    isInternetIncluded: Boolean!
+    isElectricityIncluded: Boolean!
+    isWaterIncluded: Boolean!
+    isMaintenanceFeeIncluded: Boolean!
+    isParkingFeeIncluded: Boolean!
+    isParkingAvailable: Boolean!
+    hasElevator: Boolean!
+    minimumContractPeriod: Int!
+    monthlyRentPaymentPeriod: Int!
+    cleaningServicePerWeek: Int!
+    laundryServicePerWeek: Int!
+    mapLatitude: Float!
+    mapLongitude: Float!
+    mapRadius: Float!
+    others: String!
+    authorUserID: ID! @index(name: "byUser")
+    authorUser: User @belongsTo(fields: ["authorUserID"])
+    comments: [RealEstateComment] @hasMany(indexName: "byRealEstatePost", fields: ["id"])
+    likes: [RealEstatePostLike] @hasMany(indexName: "byRealEstatePost", fields: ["id"])
+    cityID: ID! @index(name: "byCity")
+    city: City @belongsTo(fields: ["cityID"])
+}
+
+enum RealEstateStatus {
+    AVAILABLE
+    UNAVAILABLE
+}
+
+type RealEstatePostLike @model @auth(rules: [{allow: public}]) {
+    id: ID!
+    realEstatePostID: ID! @index(name: "byRealEstatePost")
+    realEstatePost: RealEstatePost @belongsTo(fields: ["realEstatePostID"])
+    userID: ID! @index(name: "byUser")
+    authorUser: User @belongsTo(fields: ["userID"])
+}
+
+type RealEstateComment @model @auth(rules: [{allow: public}]) {
+    id: ID!
+    content: String!
+    realEstatePostID: ID! @index(name: "byRealEstatePost")
+    realEstatePost: RealEstatePost @belongsTo(fields: ["realEstatePostID"])
+    userID: ID! @index(name: "byUser")
+    authorUser: User @belongsTo(fields: ["userID"])
+    replies: [RealEstateReply] @hasMany(indexName: "byRealEstateComment", fields: ["id"])
+}
+
+type RealEstateReply @model @auth(rules: [{allow: public}]) {
+    id: ID!
+    content: String!
+    realEstateCommentID: ID! @index(name: "byRealEstateComment")
+    realEstateComment: RealEstateComment @belongsTo(fields: ["realEstateCommentID"])
+    userID: ID! @index(name: "byUser")
+    authorUser: User @belongsTo(fields: ["userID"])
+}
+
+type Report @model @auth(rules: [{allow: public}]) {
+    id: ID!
+    type: ReportType!
+    reporterID: ID! @index(name: "byReporter")
+    reportedUserID: ID! @index(name: "byReportedUser")
+    postID: ID @index(name: "byReportedPost")
+    commentID: ID @index(name: "byReportedComment")
+    replyID: ID @index(name: "byReportedReply")
+    reason: ReportReason!
+    reporter: User @belongsTo(fields: ["reporterID"])
+    reportedUser: User @belongsTo(fields: ["reportedUserID"])
+    reportedPost: Post @belongsTo(fields: ["postID"])
+    reportedComment: Comment @belongsTo(fields: ["commentID"])
+    reportedReply: Reply @belongsTo(fields: ["replyID"])
+}
+
+enum ReportType {
+    POST_REPORT
+    COMMENT_REPORT
+    REPLY_REPORT
+}
+
+enum ReportReason {
+    RUDE_OR_INSULTING_BEHAVIOR
+    INAPPROPRIATE_CONTENT
+    SCAM_OR_ADVERTISEMENT
+    EXPOSURE_OF_SENSITIVE_PERSONAL_INFORMATION
+    INDISCRIMINATE_REPETITION_OF_SAME_CONTENT
+    JUST_REPORT
+}
+
+enum BuildingType {
+    APARTMENT
+    VILLA
+    HOUSE
+    RESIDENCE
+    HOTEL
+    OFFICE
+    STORE
+    OTHER
+}
+
+enum ShopCategory {
+    RESTAURANT
+    CAFE
+    HOSPITAL
+    PHARMACY
+    DAILY
+    CULTURE
+    WORKOUT
+    OTHER
+}
+
+type Shop @model @auth(rules: [{allow: public}]) {
+    id: ID!
+    name: String!
+    imageKeys: [String]!
+    category: ShopCategory!
+    contactNumber: String!
+    openingHours: String!
+    closingHours: String!
+    rating: Float
+    mapLatitude: Float!
+    mapLongitude: Float!
+    cityID: ID! @index(name: "byCity")
+    city: City @belongsTo(fields: ["cityID"])
+}
+
+type Continent @model @auth(rules: [{allow: public}]) {
+    id: ID!
+    name: String!
+    countries: [Country] @hasMany(indexName: "byContinent", fields: ["id"])
+}
+
+type Country @model @auth(rules: [{allow: public}]) {
+    id: ID!
+    name: String!
+    code: String!
+    flagEmoji: String!
+    currency: String!
+    currencyCode: String!
+    dialCode: String!
+    continentID: ID! @index(name: "byContinent")
+    continent: Continent @belongsTo(fields: ["continentID"])
+    cities: [City] @hasMany(indexName: "byCountry", fields: ["id"])
+    posts: [Post] @hasMany(indexName: "byCountry", fields: ["id"])
+}
+
+type City @model @auth(rules: [{allow: public}]) {
+    id: ID!
+    name: String!
+    state: String!
+    latitude: Float!
+    longitude: Float!
+    serviceOpeningDate: AWSDateTime
+    imageKey: String!
+    hasMainCategories: [MainCategoryType]!
+    countryID: ID! @index(name: "byCountry")
+    country: Country @belongsTo(fields: ["countryID"])
+    zoneID: ID! @index(name: "byZone")
+    zone: Zone @belongsTo(fields: ["zoneID"])
+    posts: [Post] @hasMany(indexName: "byCity", fields: ["id"])
+    realEstatePosts: [RealEstatePost] @hasMany(indexName: "byCity", fields: ["id"])
+    shops: [Shop] @hasMany(indexName: "byCity", fields: ["id"])
+    users: [User] @hasMany(indexName: "byCity", fields: ["id"])
+}
+
+type Zone @model @auth(rules: [{allow: public}]) {
+    id: ID!
+    name: String!
+    cities: [City] @hasMany(indexName: "byZone", fields: ["id"])
+}
+
+type CityAddtionRequest @model @auth(rules: [{allow: public}]) {
+    id: ID!
+    cityName: String!
+    estimatedKoreanCount : Int!
+    existingCommunity: String!
+    countryID: String!
+    userPhoneNumber: String!
+}
+

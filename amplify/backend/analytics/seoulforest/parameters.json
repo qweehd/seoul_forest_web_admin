@@ -1,0 +1,21 @@
+{
+    "appName": "seoulforest",
+    "roleName": "pinpointLambdaRole8a851bf2",
+    "cloudformationPolicyName": "cloudformationPolicy8a851bf2",
+    "cloudWatchPolicyName": "cloudWatchPolicy8a851bf2",
+    "pinpointPolicyName": "pinpointPolicy8a851bf2",
+    "authPolicyName": "pinpoint_amplify_8a851bf2",
+    "unauthPolicyName": "pinpoint_amplify_8a851bf2",
+    "authRoleName": {
+        "Ref": "AuthRoleName"
+    },
+    "unauthRoleName": {
+        "Ref": "UnauthRoleName"
+    },
+    "authRoleArn": {
+        "Fn::GetAtt": [
+            "AuthRole",
+            "Arn"
+        ]
+    }
+}

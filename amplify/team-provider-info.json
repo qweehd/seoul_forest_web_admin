@@ -1,0 +1,46 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-seoulforest-dev-83206-authRole",
+      "UnauthRoleArn": "arn:aws:iam::129199544689:role/amplify-seoulforest-dev-83206-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::129199544689:role/amplify-seoulforest-dev-83206-authRole",
+      "Region": "ap-northeast-2",
+      "DeploymentBucketName": "amplify-seoulforest-dev-83206-deployment",
+      "UnauthRoleName": "amplify-seoulforest-dev-83206-unauthRole",
+      "StackName": "amplify-seoulforest-dev-83206",
+      "StackId": "arn:aws:cloudformation:ap-northeast-2:129199544689:stack/amplify-seoulforest-dev-83206/2de32030-08b0-11ee-9c5d-0acbad888eb0",
+      "AmplifyAppId": "d3olqicbtwhybl"
+    },
+    "categories": {
+      "analytics": {
+        "Pinpoint": {
+          "Name": "seoulforest-dev",
+          "Id": "b4403e2765654d929e1bf8e598f3d380",
+          "Region": "ap-northeast-2"
+        }
+      },
+      "notifications": {
+        "Pinpoint": {
+          "Name": "seoulforest-dev",
+          "Id": "b4403e2765654d929e1bf8e598f3d380",
+          "Region": "ap-northeast-2"
+        }
+      },
+      "api": {
+        "seoulforest": {}
+      },
+      "auth": {
+        "seoulforest6019218a6019218a": {}
+      },
+      "function": {
+        "DEVNotificationTriggerFunction": {
+          "deploymentBucketName": "amplify-seoulforest-dev-83206-deployment",
+          "s3Key": "amplify-builds/DEVNotificationTriggerFunction-76653632353036786e72-build.zip"
+        }
+      },
+      "storage": {
+        "s304817d7c": {}
+      }
+    }
+  }
+}

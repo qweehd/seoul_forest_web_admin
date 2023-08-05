@@ -1,0 +1,15 @@
+{
+  "resourceName": "s304817d7c",
+  "policyUUID": "04817d7c",
+  "bucketName": "seoulforest946d11193b74484098fc836b62a80eb7",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "READ"
+  ],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}

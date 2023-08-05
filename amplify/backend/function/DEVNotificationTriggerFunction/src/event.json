@@ -1,0 +1,55 @@
+{
+  "Records": [
+    {
+      "eventID": "037b3283a69641fb28e183fda8cc11c8",
+      "eventName": "INSERT",
+      "eventVersion": "1.1",
+      "eventSource": "aws:dynamodb",
+      "awsRegion": "ap-northeast-2",
+      "dynamodb": {
+        "ApproximateCreationDateTime": 1686811632,
+        "Keys": {
+          "id": {
+            "S": "d9c9ecc1-60e8-48d3-9d10-551cba701525"
+          }
+        },
+        "NewImage": {
+          "createdAt": {
+            "S": "2023-06-15T06:47:12.382Z"
+          },
+          "notificationTargetPostId": {
+            "S": "058bb1d0-2362-4e95-82bd-03c1f38c82c6"
+          },
+          "triggerUserID": {
+            "S": "d4f80d9c-b011-7060-ecc9-522f436e942b"
+          },
+          "__typename": {
+            "S": "Notification"
+          },
+          "isRead": {
+            "BOOL": false
+          },
+          "id": {
+            "S": "d9c9ecc1-60e8-48d3-9d10-551cba701525"
+          },
+          "message": {
+            "S": ""
+          },
+          "type": {
+            "S": "NEW_REPLYLIKE"
+          },
+          "userID": {
+            "S": "a4f81d7c-d061-70e0-ed89-89a517f67af1"
+          },
+          "updatedAt": {
+            "S": "2023-06-15T06:47:12.382Z"
+          }
+        },
+        "SequenceNumber": "14891200000000020891993273",
+        "SizeBytes": 346,
+        "StreamViewType": "NEW_AND_OLD_IMAGES"
+      },
+      "eventSourceARN": "arn:aws:dynamodb:ap-northeast-2:129199544689:table/Notification-xc3cuqt2j5f53ffrcl7qg2ztau-dev/stream/2023-06-11T23:58:42.270"
+    }
+  ]
+}
