@@ -34,7 +34,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
-  final _pages = [PublicNotice(), PostList(postItems: getPostItems()), UserList(userItems: getUserItems()), ReportList(reportItems: getReportItems(),)];
+  final _pages = [const PublicNotice(), PostList(postItems: getPostItems()), UserList(userItems: getUserItems()), ReportList(reportItems: getReportItems(),)];
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: const Text('관리자페이지'),
         actions: <Widget>[
           TextButton(
-            child: Row(
+            child: const Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(Icons.arrow_back, color: Colors.white),
@@ -66,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            DrawerHeader(
+            const DrawerHeader(
               child: Text(
                 '서울숲',
                 style: TextStyle(
@@ -78,10 +78,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 color: Colors.blue,
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             ListTile(
-              leading: Icon(Icons.announcement),
-              title: Text('공지사항'),
+              leading: const Icon(Icons.announcement),
+              title: const Text('공지사항'),
               onTap: () {
                 setState(() {
                   _currentIndex = 0;
@@ -90,8 +90,8 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.manage_accounts),
-              title: Text('게시물관리'),
+              leading: const Icon(Icons.manage_accounts),
+              title: const Text('게시물관리'),
               onTap: () {
                 setState(() {
                   _currentIndex = 1;
@@ -100,8 +100,8 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.supervised_user_circle),
-              title: Text('사용자관리'),
+              leading: const Icon(Icons.supervised_user_circle),
+              title: const Text('사용자관리'),
               onTap: () {
                 setState(() {
                   _currentIndex = 2;
@@ -110,8 +110,8 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.report_problem),
-              title: Text('사용자신고관리'),
+              leading: const Icon(Icons.report_problem),
+              title: const Text('사용자신고관리'),
               onTap: () {
                 setState(() {
                   _currentIndex = 3;
