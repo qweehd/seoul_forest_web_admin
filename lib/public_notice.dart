@@ -19,14 +19,14 @@ class Notice {
   });
 }
 
-class PublicNotice extends StatefulWidget {
-  const PublicNotice({Key? key}) : super(key: key);
+class PublicNoticeScreen extends StatefulWidget {
+  const PublicNoticeScreen({Key? key}) : super(key: key);
 
   @override
-  _PublicNoticeState createState() => _PublicNoticeState();
+  _PublicNoticeScreenState createState() => _PublicNoticeScreenState();
 }
 
-class _PublicNoticeState extends State<PublicNotice> {
+class _PublicNoticeScreenState extends State<PublicNoticeScreen> {
   late Map<int, bool> checkedMap;
   late List<Notice> notices;
 

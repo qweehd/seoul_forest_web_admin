@@ -121,7 +121,7 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: Text('Public Notice List'),
         ),
-        body: PublicNotice(),
+        body: PublicNoticeScreen(),
       ),
     );
   }
