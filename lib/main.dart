@@ -1,7 +1,8 @@
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
-import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:seoul_forest_web_admin/data/post_repository.dart';
 import 'package:seoul_forest_web_admin/post_list.dart';
 import 'package:seoul_forest_web_admin/post_list_item.dart';
 import 'package:seoul_forest_web_admin/public_notice.dart';
@@ -10,13 +11,20 @@ import 'package:seoul_forest_web_admin/report_list.dart';
 import 'package:seoul_forest_web_admin/report_list_item.dart';
 import 'package:seoul_forest_web_admin/user_list.dart';
 import 'package:seoul_forest_web_admin/user_list_item.dart';
+import 'package:seoul_forest_web_admin/viewmodels/post_viewmodel.dart';
 import 'amplifyconfiguration.dart';
 import 'models/ModelProvider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await configureAmplify();
-  runApp(const MyApp());
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(
+          create: (context) => PostViewModel(postRepository: PostRepository())),
+    ],
+    child: const MyApp(),
+  ));
 }
 
 Future<void> configureAmplify() async {
@@ -56,11 +64,19 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
   final _pages = [
-    PublicNoticeList(noticeItems: getNoticeItems(),),
+    PublicNoticeList(
+      noticeItems: getNoticeItems(),
+    ),
     PostList(postItems: getPostItems()),
     UserList(userItems: getUserItems()),
     ReportList(reportItems: getReportItems())
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<PostViewModel>(context, listen: false).queryPostItems();
+  }
 
   @override
   Widget build(BuildContext context) {
