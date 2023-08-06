@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:seoul_forest_web_admin/post_list_edit.dart';
 import 'package:seoul_forest_web_admin/post_list_item.dart';
+import 'package:seoul_forest_web_admin/post_list_write.dart';
 
 class PostItem {
   final int id;
@@ -63,12 +64,33 @@ class _PostListState extends State<PostList> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          Container(
-            padding: EdgeInsets.only(top: 10, bottom: 10, right: 10),
-            alignment: Alignment.centerRight,
-            child: ElevatedButton(
-              child: Text('삭제하기'),
-              onPressed: deleteSelected,
+          Padding(
+            padding: EdgeInsets.only(top: 10, bottom: 10, left: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedButton(
+                  child: Text('추가하기'),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => PostListWritePage()),
+                    ).then((newPostItem) {
+                      if (newPostItem != null) {
+                        setState(() {
+                          postitems.add(newPostItem);
+                        });
+                      }
+                    });
+                  },
+                ),
+                SizedBox(width: 10), // This gives some space between the buttons
+                ElevatedButton(
+                  child: Text('삭제하기'),
+                  onPressed: deleteSelected,
+                ),
+                SizedBox(width: 10),
+              ],
             ),
           ),
           SingleChildScrollView(
