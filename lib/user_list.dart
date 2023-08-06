@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:seoul_forest_web_admin/user_list_edit.dart'; // 이 페이지를 작성해야 합니다.
+import 'package:seoul_forest_web_admin/user_list_edit.dart';
+import 'package:seoul_forest_web_admin/user_list_write.dart'; // 이 페이지를 작성해야 합니다.
 
 class UserItem {
   final int id;
@@ -54,12 +55,33 @@ class _UserListState extends State<UserList> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          Container(
+          Padding(
             padding: EdgeInsets.only(top: 10, bottom: 10, right: 10),
-            alignment: Alignment.centerRight,
-            child: ElevatedButton(
-              child: Text('삭제하기'),
-              onPressed: deleteSelected,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedButton(
+                  child: Text('추가하기'),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => UserWritePage()),
+                    ).then((newUserItem) {
+                      if (newUserItem != null) {
+                        setState(() {
+                          useritems.add(newUserItem); // 새로운 Notice를 목록에 추가
+                        });
+                      }
+                    });
+                    // Add your '추가하기' button action here
+                  },
+                ),
+                SizedBox(width: 10), // This gives some space between the buttons
+                ElevatedButton(
+                  child: Text('삭제하기'),
+                  onPressed: deleteSelected,
+                ),
+              ],
             ),
           ),
           SingleChildScrollView(
