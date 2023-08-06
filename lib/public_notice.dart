@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:seoul_forest_web_admin/public_notice_edit.dart';
+import 'package:seoul_forest_web_admin/public_notice_write.dart';
 
 class Notice {
   final int id;
@@ -52,12 +53,32 @@ class _PublicNoticeScreenState extends State<PublicNoticeScreen> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          Container(
+          Padding(
             padding: EdgeInsets.only(top: 10, bottom: 10, right: 10),
-            alignment: Alignment.centerRight,
-            child: ElevatedButton(
-              child: Text('삭제하기'),
-              onPressed: deleteSelected,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedButton(
+                  child: Text('추가하기'),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => PublicNoticeWritePage()),
+                    ).then((newNoticeItem) {
+                      if (newNoticeItem != null) {
+                        setState(() {
+                          notices.add(newNoticeItem); // 새로운 Notice를 목록에 추가
+                        });
+                      }
+                    });
+                  },
+                ),
+                SizedBox(width: 10), // This gives some space between the buttons
+                ElevatedButton(
+                  child: Text('삭제하기'),
+                  onPressed: deleteSelected,
+                ),
+              ],
             ),
           ),
           SingleChildScrollView(
@@ -98,6 +119,7 @@ class _PublicNoticeScreenState extends State<PublicNoticeScreen> {
       ),
     );
   }
+
   void deleteSelected() {
     setState(() {
       notices.removeWhere((notice) => checkedMap[notice.id] == true);
