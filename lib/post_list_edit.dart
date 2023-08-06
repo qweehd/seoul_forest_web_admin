@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:seoul_forest_web_admin/post_list.dart';
 
+import 'models/ModelProvider.dart';
+
 class PostListEditPage extends StatefulWidget {
-  final PostItem postitem;
+  final Post postitem;
 
   const PostListEditPage({Key? key, required this.postitem}) : super(key: key);
 
@@ -15,6 +17,7 @@ class _PostListEditPageState extends State<PostListEditPage> {
   late TextEditingController _contentController;
   late TextEditingController _createdAtController;
   late TextEditingController _currencyController;
+
   // You need to handle List<String> for imageKeys
   late TextEditingController _isNegotiableController;
   late TextEditingController _mainCategoryIDController;
@@ -32,18 +35,22 @@ class _PostListEditPageState extends State<PostListEditPage> {
     super.initState();
     _idController = TextEditingController(text: '${widget.postitem.id}');
     _contentController = TextEditingController(text: widget.postitem.content);
-    _createdAtController = TextEditingController(text: '${widget.postitem.createdAt}');
+    _createdAtController =
+        TextEditingController(text: '${widget.postitem.createdAt}');
     _currencyController = TextEditingController(text: widget.postitem.currency);
-    _isNegotiableController = TextEditingController(text: '${widget.postitem.isNegotiable}');
-    _mainCategoryIDController = TextEditingController(text: '${widget.postitem.mainCategoryID}');
-    _mainCategoryTypeController = TextEditingController(text: widget.postitem.mainCategoryType);
+    _isNegotiableController =
+        TextEditingController(text: '${widget.postitem.isNegotiable}');
+    _mainCategoryTypeController = TextEditingController(
+        text: widget.postitem.mainCategoryType.toString());
     _priceController = TextEditingController(text: '${widget.postitem.price}');
     _statusController = TextEditingController(text: widget.postitem.status);
-    _subCategoryIDController = TextEditingController(text: '${widget.postitem.subCategoryID}');
+    _subCategoryIDController =
+        TextEditingController(text: '${widget.postitem.subCategory?.id}');
     _titleController = TextEditingController(text: widget.postitem.title);
-    _updatedAtController = TextEditingController(text: '${widget.postitem.updatedAt}');
-    _userIDController = TextEditingController(text: widget.postitem.userID);
-    _typenameController = TextEditingController(text: widget.postitem.typename);
+    _updatedAtController =
+        TextEditingController(text: '${widget.postitem.updatedAt}');
+    _userIDController =
+        TextEditingController(text: widget.postitem.authorUser?.id);
   }
 
   @override

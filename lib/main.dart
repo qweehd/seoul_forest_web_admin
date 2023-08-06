@@ -67,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
     PublicNoticeList(
       noticeItems: getNoticeItems(),
     ),
-    PostList(postItems: getPostItems()),
+    const PostList(),
     UserList(userItems: getUserItems()),
     ReportList(reportItems: getReportItems())
   ];
