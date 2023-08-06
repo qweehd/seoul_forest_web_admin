@@ -19,7 +19,7 @@ class _UserWritePageState extends State<UserWritePage> {
   final TextEditingController _updatedAtController = TextEditingController();
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _typenameController = TextEditingController();
-  final TextEditingController _devicePlatform = TextEditingController();
+  final TextEditingController _devicePlatformController = TextEditingController();
 
   bool? _isCompletelyRegistered;
 
@@ -43,7 +43,7 @@ class _UserWritePageState extends State<UserWritePage> {
             buildTextFormField(_updatedAtController, 'updatedAt'),
             buildTextFormField(_userNameController, 'userName'),
             buildTextFormField(_typenameController, 'typename'),
-            buildTextFormField(_devicePlatform, 'devicePlatform'),
+            buildTextFormField(_devicePlatformController, 'devicePlatform'),
             SizedBox(height: 20),
             Text('isCompletelyRegistered:'),
             Row(
@@ -91,7 +91,7 @@ class _UserWritePageState extends State<UserWritePage> {
                     updatedAt: DateTime.now(),
                     userName: _userNameController.text,
                     typename: _typenameController.text,
-                    devicePlatform: _devicePlatform.text,
+                    devicePlatform: _devicePlatformController.text,
                     isCompletelyRegistered: _isCompletelyRegistered!,
                   );
                   Navigator.pop(context, userItem);

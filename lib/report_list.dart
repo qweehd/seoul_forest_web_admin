@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:seoul_forest_web_admin/report_list_edit.dart';
+import 'package:seoul_forest_web_admin/report_list_write.dart';
 import 'package:seoul_forest_web_admin/user_list_edit.dart'; // 이 페이지를 작성해야 합니다.
 
 class ReportItem {
@@ -51,12 +52,32 @@ class _ReportListState extends State<ReportList> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          Container(
+          Padding(
             padding: EdgeInsets.only(top: 10, bottom: 10, right: 10),
-            alignment: Alignment.centerRight,
-            child: ElevatedButton(
-              child: Text('삭제하기'),
-              onPressed: deleteSelected,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedButton(
+                  child: Text('추가하기'),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ReportWritePage()),
+                    ).then((newReportItem) {
+                      if (newReportItem != null) {
+                        setState(() {
+                          reportItems.add(newReportItem); // 새로운 Notice를 목록에 추가
+                        });
+                      }
+                    });
+                  },
+                ),
+                SizedBox(width: 10), // This gives some space between the buttons
+                ElevatedButton(
+                  child: Text('삭제하기'),
+                  onPressed: deleteSelected,
+                ),
+              ],
             ),
           ),
           SingleChildScrollView(
