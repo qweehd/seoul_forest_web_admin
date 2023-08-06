@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:seoul_forest_web_admin/public_notice.dart';
 
 class EditNoticePage extends StatefulWidget {
-  final Notice notice;
+  final NoticeItem notice;
 
   const EditNoticePage({Key? key, required this.notice}) : super(key: key);
 
@@ -48,80 +48,30 @@ class _EditNoticePageState extends State<EditNoticePage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: <Widget>[
-            TextField(
-              controller: _idController,
-              decoration: InputDecoration(
-                labelText: 'ID',
-              ),
-            ),
-            TextField(
-              controller: _titleController,
-              decoration: InputDecoration(
-                labelText: 'Title',
-              ),
-            ),
-            TextField(
-              controller: _contentController,
-              decoration: InputDecoration(
-                labelText: 'Content',
-              ),
-            ),
-            TextField(
-              controller: _createdAtController,
-              decoration: InputDecoration(
-                labelText: 'Created At',
-              ),
-            ),
-            TextField(
-              controller: _sortNumController,
-              decoration: InputDecoration(
-                labelText: 'Sort Number',
-              ),
-            ),
-            TextField(
-              controller: _updateAtController,
-              decoration: InputDecoration(
-                labelText: 'Updated At',
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                // Implement the update logic here
-                print('Updated ID: ${_idController.text}');
-                print('Updated Title: ${_titleController.text}');
-                print('Updated Content: ${_contentController.text}');
-                print('Updated Created At: ${_createdAtController.text}');
-                print('Updated Sort Number: ${_sortNumController.text}');
-                print('Updated Updated At: ${_updateAtController.text}');
-              },
-              child: Text('Update'),
-            ),
-          ],
+        child: ListView(
+        children: <Widget>[
+          buildTextField(_idController, 'ID'),
+          buildTextField(_titleController, 'Title'),
+          buildTextField(_contentController, 'Content'),
+          buildTextField(_createdAtController, 'CreatedAt'),
+          buildTextField(_sortNumController, 'SortNum'),
+          buildTextField(_updateAtController, 'UpdateAt'),
+         ElevatedButton(onPressed: (){
+
+         },
+             child: Text('수정하기')
+         )
+        ],
         ),
       ),
     );
-  }
 }
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Public Notice List',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Public Notice List'),
-        ),
-        body: PublicNoticeScreen(),
+  Widget buildTextField(TextEditingController controller, String label) {
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
       ),
     );
   }

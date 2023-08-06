@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:seoul_forest_web_admin/post_list_edit.dart';
-import 'package:seoul_forest_web_admin/post_list_item.dart';
 import 'package:seoul_forest_web_admin/post_list_write.dart';
 
 class PostItem {

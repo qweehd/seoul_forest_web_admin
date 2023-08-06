@@ -3,14 +3,15 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import 'package:flutter/material.dart';
 import 'package:seoul_forest_web_admin/post_list.dart';
+import 'package:seoul_forest_web_admin/post_list_item.dart';
+import 'package:seoul_forest_web_admin/public_notice.dart';
+import 'package:seoul_forest_web_admin/public_notice_item.dart';
 import 'package:seoul_forest_web_admin/report_list.dart';
 import 'package:seoul_forest_web_admin/report_list_item.dart';
 import 'package:seoul_forest_web_admin/user_list.dart';
 import 'package:seoul_forest_web_admin/user_list_item.dart';
 import 'amplifyconfiguration.dart';
 import 'models/ModelProvider.dart';
-import 'public_notice.dart';
-import 'package:seoul_forest_web_admin/post_list_item.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,12 +56,10 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
   final _pages = [
-    const PublicNoticeScreen(),
+    PublicNoticeList(noticeItems: getNoticeItems(),),
     PostList(postItems: getPostItems()),
     UserList(userItems: getUserItems()),
-    ReportList(
-      reportItems: getReportItems(),
-    )
+    ReportList(reportItems: getReportItems())
   ];
 
   @override

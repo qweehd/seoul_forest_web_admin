@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:seoul_forest_web_admin/public_notice_edit.dart';
 import 'package:seoul_forest_web_admin/public_notice_write.dart';
 
-class Notice {
+class NoticeItem {
   final int id;
   final String content;
   final DateTime createdAt;
@@ -10,7 +10,7 @@ class Notice {
   final String title;
   final DateTime updateAt;
 
-  Notice({
+  NoticeItem({
     required this.id,
     required this.content,
     required this.createdAt,
@@ -20,32 +20,24 @@ class Notice {
   });
 }
 
-class PublicNoticeScreen extends StatefulWidget {
-  const PublicNoticeScreen({Key? key}) : super(key: key);
+class PublicNoticeList extends StatefulWidget {
+  final List<NoticeItem> noticeItems;
+
+  const PublicNoticeList({Key? key, required this.noticeItems}) : super(key: key);
 
   @override
-  _PublicNoticeScreenState createState() => _PublicNoticeScreenState();
+  _PublicNoticeListState createState() => _PublicNoticeListState();
 }
 
-class _PublicNoticeScreenState extends State<PublicNoticeScreen> {
+class _PublicNoticeListState extends State<PublicNoticeList> {
   late Map<int, bool> checkedMap;
-  late List<Notice> notices;
+  late List<NoticeItem> notices;
 
   @override
   void initState() {
     super.initState();
     checkedMap = {for (var i = 0; i < 10; i++) i: false};
-    notices = [
-      Notice(
-        id: 1,
-        content: 'This is a test notice',
-        createdAt: DateTime.now(),
-        sortNum: 1,
-        title: 'Test Notice',
-        updateAt: DateTime.now(),
-      ),
-      // More notices...
-    ];
+    notices = widget.noticeItems;
   }
 
   @override
@@ -93,7 +85,7 @@ class _PublicNoticeScreenState extends State<PublicNoticeScreen> {
                 DataColumn(label: Text('Sort Num')),
                 DataColumn(label: Text('Updated At')),
               ],
-              rows: notices.map((Notice notice) {
+              rows: notices.map((NoticeItem notice) {
                 return DataRow(
                   cells: <DataCell>[
                     DataCell(Checkbox(
@@ -126,7 +118,7 @@ class _PublicNoticeScreenState extends State<PublicNoticeScreen> {
     });
   }
 
-  Widget buildDataCell(BuildContext context, String data, Notice notice) {
+  Widget buildDataCell(BuildContext context, String data, NoticeItem notice) {
     return InkWell(
       onTap: () {
         Navigator.push(

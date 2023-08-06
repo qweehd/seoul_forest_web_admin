@@ -38,7 +38,7 @@ class _PublicNoticeWritePageState extends State<PublicNoticeWritePage> {
             ElevatedButton(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  var noticeItem = Notice(
+                  var noticeItem = NoticeItem(
                     id: DateTime.now().millisecondsSinceEpoch,
                     title: _titleController.text,
                     content: _contentController.text,
