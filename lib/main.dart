@@ -64,10 +64,10 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
   final _pages = [
+    const PostList(),
     PublicNoticeList(
       noticeItems: getNoticeItems(),
     ),
-    const PostList(),
     UserList(userItems: getUserItems()),
     ReportList(reportItems: getReportItems())
   ];
@@ -82,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('관리자페이지'),
+        title: const Text('서울숲 관리자 페이지'),
         actions: <Widget>[
           TextButton(
             child: const Row(
