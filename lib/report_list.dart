@@ -1,54 +1,69 @@
 import 'package:flutter/material.dart';
 import 'package:seoul_forest_web_admin/report_list_edit.dart';
 import 'package:seoul_forest_web_admin/report_list_write.dart';
-import 'package:seoul_forest_web_admin/user_list_edit.dart'; // 이 페이지를 작성해야 합니다.
+import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:seoul_forest_web_admin/viewmodels/report_viewmodel.dart';
+import 'models/Report.dart';
+import 'viewmodels/notice_viewmodel.dart';
+
+
 
 class ReportItem {
   final int id;
   final DateTime createdAt;
-  final int postID;
+  final int reportedPost;
+  final int reportedComment;
+  final int reportedReply;
   final String reason;
-  final String reportedUserID;
-  final String reporterID;
+  final String reportedUser;
+  final String reporter;
   final String type;
   final DateTime updatedAt;
-  final String typename;
 
   ReportItem({
     required this.id,
     required this.createdAt,
-    required this.postID,
+    required this.reportedPost,
+    required this.reportedComment,
+    required this.reportedReply,
     required this.reason,
-    required this.reportedUserID,
-    required this.reporterID,
+    required this.reportedUser,
+    required this.reporter,
     required this.type,
     required this.updatedAt,
-    required this.typename,
   });
 }
 
 class ReportList extends StatefulWidget {
-  final List<ReportItem> reportItems;
-
-  const ReportList({Key? key, required this.reportItems}) : super(key: key);
+  const ReportList({
+    Key? key,
+  }) : super(key: key);
 
   @override
-  _ReportListState createState() => _ReportListState();
+  State<ReportList> createState() => _ReportListState();
 }
 
 class _ReportListState extends State<ReportList> {
-  late Map<int, bool> checkedMap;
-  late List<ReportItem> reportItems;
+  late Map<String, bool> checkedMap;
+  late List<Report> reportList;
 
   @override
   void initState() {
     super.initState();
-    checkedMap = {for (var i = 0; i < 10; i++) i: false};
-    reportItems = widget.reportItems;
+    checkedMap = {};
   }
 
   @override
   Widget build(BuildContext context) {
+    return Consumer<ReportViewModel>(builder: (context, viewModel, child) {
+      if (viewModel.reportItems.isEmpty) {
+        return Center(child: CircularProgressIndicator());
+      }
+      if (viewModel.reportItems != null) {
+        reportList = viewModel.reportItems;
+      }
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -66,7 +81,7 @@ class _ReportListState extends State<ReportList> {
                     ).then((newReportItem) {
                       if (newReportItem != null) {
                         setState(() {
-                          reportItems.add(newReportItem); // 새로운 Notice를 목록에 추가
+                          reportList.add(newReportItem); // 새로운 Notice를 목록에 추가
                         });
                       }
                     });
@@ -87,15 +102,17 @@ class _ReportListState extends State<ReportList> {
                 DataColumn(label: Text('Select')),
                 DataColumn(label: Text('ID')),
                 DataColumn(label: Text('Created At')),
-                DataColumn(label: Text('Post ID')),
+                DataColumn(label: Text('Reported Post ')),
+                DataColumn(label: Text('Reported Comment')),
+                DataColumn(label: Text('Reported Reply')),
                 DataColumn(label: Text('Reason')),
-                DataColumn(label: Text('Reported User ID')),
-                DataColumn(label: Text('Reporter ID')),
+                DataColumn(label: Text('Reported User')),
+                DataColumn(label: Text('Reporter')),
                 DataColumn(label: Text('Type')),
                 DataColumn(label: Text('Updated At')),
-                DataColumn(label: Text('typename')),
+                DataColumn(label: Text('type')),
               ],
-              rows: reportItems.map((ReportItem reportitem) {
+              rows: reportList.map((Report reportitem) {
                 return DataRow(
                   cells: <DataCell>[
                     DataCell(Checkbox(
@@ -106,15 +123,16 @@ class _ReportListState extends State<ReportList> {
                         });
                       },
                     )),
-                    DataCell(buildDataCell(context, '${reportitem.id}', reportitem)),
+                    DataCell(buildDataCell(context, reportitem.id, reportitem)),
                     DataCell(buildDataCell(context, '${reportitem.createdAt}', reportitem)),
-                    DataCell(buildDataCell(context, '${reportitem.postID}', reportitem)),
-                    DataCell(buildDataCell(context, reportitem.reason, reportitem)),
-                    DataCell(buildDataCell(context, reportitem.reportedUserID, reportitem)),
-                    DataCell(buildDataCell(context, reportitem.reporterID, reportitem)),
-                    DataCell(buildDataCell(context, reportitem.type, reportitem)),
+                    DataCell(buildDataCell(context, '${reportitem.reportedPost}', reportitem)),
+                    DataCell(buildDataCell(context, '${reportitem.reportedComment}', reportitem)),
+                    DataCell(buildDataCell(context, '${reportitem.reportedReply}', reportitem)),
+                    DataCell(buildDataCell(context, '${reportitem.reason}', reportitem)),
+                    DataCell(buildDataCell(context, '${reportitem.reportedUser}', reportitem)),
+                    DataCell(buildDataCell(context, '${reportitem.reporter}', reportitem)),
+                    DataCell(buildDataCell(context, '${reportitem.type}', reportitem)),
                     DataCell(buildDataCell(context, '${reportitem.updatedAt}', reportitem)),
-                    DataCell(buildDataCell(context, reportitem.typename, reportitem)),
                   ],
                 );
               }).toList(),
@@ -124,14 +142,16 @@ class _ReportListState extends State<ReportList> {
       ),
     );
   }
+    );
+  }
 
   void deleteSelected() {
     setState(() {
-      reportItems.removeWhere((reportitem) => checkedMap[reportitem.id] == true);
+      reportList.removeWhere((reportitem) => checkedMap[reportitem.id] == true);
     });
   }
 
-  Widget buildDataCell(BuildContext context, String data, ReportItem reportitem) {
+  Widget buildDataCell(BuildContext context, String data, Report reportitem) {
     return InkWell(
       onTap: () {
         Navigator.push(
