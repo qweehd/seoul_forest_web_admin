@@ -96,6 +96,7 @@ class _PostListState extends State<PostList> {
                 rows: postList.map((Post post) {
                   return DataRow(
                     cells: <DataCell>[
+                      /* Select Field*/
                       DataCell(Checkbox(
                         value: checkedMap[post.id] ?? false,
                         onChanged: (value) {
@@ -104,32 +105,57 @@ class _PostListState extends State<PostList> {
                           });
                         },
                       )),
+
+                      /* ID Field*/
                       DataCell(buildDataCell(context, post.id, post)),
+
+                      /* Title Field*/
+                      DataCell(buildDataCell(context, post.title, post)),
+                      /* Content Field*/
                       DataCell(buildDataCell(context, post.content, post)),
 
+                      /* Price Field*/
+                      DataCell(buildDataCell(context, '${post.price}', post)),
+
+                      /* Currency Field*/
+                      DataCell(buildDataCell(context, post.currency!, post)),
+
+                      /* Created At Field*/
                       DataCell(buildDataCell(
                           context, post.createdAt.toString(), post)),
-                      DataCell(buildDataCell(context, post.currency!, post)),
-                      DataCell(buildDataCell(context,
+                      /* Is Negotiable Field*/
+                      DataCell(
+                          buildDataCell(context, '${post.isNegotiable}', post)),
+
+                      /* ImageKeys Field*/
+                      DataCell(buildDataCell(
+                          context,
                           post.imageKeys != null && post.imageKeys!.isNotEmpty
                               ? post.imageKeys!.first.toString()
                               : "",
                           post)),
 
-                      DataCell(
-                          buildDataCell(context, '${post.isNegotiable}', post)),
+                      /* MainCategoryType Field*/
+
                       DataCell(buildDataCell(
                           context, post.mainCategoryType.toString(), post)),
-                      DataCell(buildDataCell(context, '${post.price}', post)),
+
+                      /* SubCategoryID Field*/
 
                       DataCell(buildDataCell(
                           context, '${post.subCategory?.id}', post)),
-                      DataCell(buildDataCell(context, post.title, post)),
+
+                      /* CityID Field*/
+                      DataCell(buildDataCell(context, post.city!.id, post)),
+
+                      /* CountryID Field*/
+                      DataCell(buildDataCell(context, post.country!.id, post)),
+
+                      /* UpdatedAt Field*/
                       DataCell(
                           buildDataCell(context, '${post.updatedAt}', post)),
 
-                      DataCell(buildDataCell(context, post.city!.id, post)),
-                      DataCell(buildDataCell(context, post.country!.id, post)),
+                      /* AuthorUserID Field*/
                       DataCell(buildDataCell(
                           context, post.authorUser?.id ?? "", post)),
                     ],
@@ -158,7 +184,10 @@ class _PostListState extends State<PostList> {
               builder: (context) => PostListEditPage(postitem: postitem)),
         );
       },
-      child: Text(data),
+      child: SizedBox(
+        width: 220,
+        child: Text(data),
+      ),
     );
   }
 }
