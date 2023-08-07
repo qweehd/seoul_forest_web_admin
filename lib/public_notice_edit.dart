@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:seoul_forest_web_admin/public_notice.dart';
+import 'models/ModelProvider.dart';
 
 class EditNoticePage extends StatefulWidget {
-  final NoticeItem notice;
+  final PublicNotice notice;
 
   const EditNoticePage({Key? key, required this.notice}) : super(key: key);
 
@@ -16,7 +17,7 @@ class _EditNoticePageState extends State<EditNoticePage> {
   late TextEditingController _contentController;
   late TextEditingController _createdAtController;
   late TextEditingController _sortNumController;
-  late TextEditingController _updateAtController;
+  late TextEditingController _updatedAtController;
 
   @override
   void initState() {
@@ -26,7 +27,7 @@ class _EditNoticePageState extends State<EditNoticePage> {
     _contentController = TextEditingController(text: widget.notice.content);
     _createdAtController = TextEditingController(text: '${widget.notice.createdAt}');
     _sortNumController = TextEditingController(text: '${widget.notice.sortNum}');
-    _updateAtController = TextEditingController(text: '${widget.notice.updateAt}');
+    _updatedAtController = TextEditingController(text: '${widget.notice.updatedAt}');
   }
 
   @override
@@ -36,7 +37,7 @@ class _EditNoticePageState extends State<EditNoticePage> {
     _contentController.dispose();
     _createdAtController.dispose();
     _sortNumController.dispose();
-    _updateAtController.dispose();
+    _updatedAtController.dispose();
     super.dispose();
   }
 
@@ -55,7 +56,7 @@ class _EditNoticePageState extends State<EditNoticePage> {
           buildTextField(_contentController, 'Content'),
           buildTextField(_createdAtController, 'CreatedAt'),
           buildTextField(_sortNumController, 'SortNum'),
-          buildTextField(_updateAtController, 'UpdateAt'),
+          buildTextField(_updatedAtController, 'UpdateAt'),
          ElevatedButton(onPressed: (){
 
          },

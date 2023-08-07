@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:seoul_forest_web_admin/models/ModelProvider.dart';
 import 'package:seoul_forest_web_admin/public_notice_edit.dart';
 import 'package:seoul_forest_web_admin/public_notice_write.dart';
+import 'package:provider/provider.dart';
+import 'viewmodels/notice_viewmodel.dart';
 
 class NoticeItem {
   final int id;
@@ -21,104 +24,121 @@ class NoticeItem {
 }
 
 class PublicNoticeList extends StatefulWidget {
-  final List<NoticeItem> noticeItems;
-
-  const PublicNoticeList({Key? key, required this.noticeItems}) : super(key: key);
+  const PublicNoticeList({
+    Key? key,
+  }) : super(key: key);
 
   @override
-  _PublicNoticeListState createState() => _PublicNoticeListState();
+  State<PublicNoticeList> createState() => _PublicNoticeListState();
 }
 
 class _PublicNoticeListState extends State<PublicNoticeList> {
-  late Map<int, bool> checkedMap;
-  late List<NoticeItem> notices;
+  late Map<String, bool> checkedMap;
+  late List<PublicNotice> noticeList;
 
   @override
   void initState() {
     super.initState();
-    checkedMap = {for (var i = 0; i < 10; i++) i: false};
-    notices = widget.noticeItems;
+    checkedMap = {};
   }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: 10, bottom: 10, right: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+    return Consumer<NoticeViewModel>(builder: (context, viewModel, child) {
+      if (viewModel.noticeItems.isEmpty) {
+        return Center(child: CircularProgressIndicator());
+      }
+      if (viewModel.noticeItems != null) {
+        noticeList = viewModel.noticeItems;
+      }
+      return SingleChildScrollView(
+            child: Column(
               children: [
-                ElevatedButton(
-                  child: Text('추가하기'),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => PublicNoticeWritePage()),
-                    ).then((newNoticeItem) {
-                      if (newNoticeItem != null) {
-                        setState(() {
-                          notices.add(newNoticeItem); // 새로운 Notice를 목록에 추가
-                        });
-                      }
-                    });
-                  },
+                Padding(
+                  padding: EdgeInsets.only(top: 10, bottom: 10, right: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton(
+                        child: Text('추가하기'),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PublicNoticeWritePage()),
+                          ).then((newNoticeItem) {
+                            if (newNoticeItem != null) {
+                              setState(() {
+                                noticeList.add(
+                                    newNoticeItem); // 새로운 Notice를 목록에 추가
+                              });
+                            }
+                          });
+                        },
+                      ),
+                      SizedBox(width: 10),
+                      // This gives some space between the buttons
+                      ElevatedButton(
+                        child: Text('삭제하기'),
+                        onPressed: deleteSelected,
+                      ),
+                    ],
+                  ),
                 ),
-                SizedBox(width: 10), // This gives some space between the buttons
-                ElevatedButton(
-                  child: Text('삭제하기'),
-                  onPressed: deleteSelected,
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: DataTable(
+                    columns: const <DataColumn>[
+                      DataColumn(label: Text('Select')),
+                      DataColumn(label: Text('ID')),
+                      DataColumn(label: Text('Title')),
+                      DataColumn(label: Text('Content')),
+                      DataColumn(label: Text('Created At')),
+                      DataColumn(label: Text('Sort Num')),
+                      DataColumn(label: Text('Updated At')),
+                    ],
+                    rows: noticeList.map((PublicNotice notice) {
+                      return DataRow(
+                        cells: <DataCell>[
+                          DataCell(Checkbox(
+                            value: checkedMap[notice.id],
+                            onChanged: (value) {
+                              setState(() {
+                                checkedMap[notice.id] = value!;
+                              });
+                            },
+                          )),
+                          DataCell(
+                              buildDataCell(context, '${notice.id}', notice)),
+                          DataCell(
+                              buildDataCell(context, notice.title, notice)),
+                          DataCell(
+                              buildDataCell(context, notice.content, notice)),
+                          DataCell(buildDataCell(
+                              context, '${notice.createdAt}', notice)),
+                          DataCell(buildDataCell(
+                              context, '${notice.sortNum}', notice)),
+                          DataCell(buildDataCell(
+                              context, '${notice.updatedAt}', notice)),
+                        ],
+                      );
+                    }).toList(),
+                  ),
                 ),
               ],
             ),
-          ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: DataTable(
-              columns: const <DataColumn>[
-                DataColumn(label: Text('Select')),
-                DataColumn(label: Text('ID')),
-                DataColumn(label: Text('Title')),
-                DataColumn(label: Text('Content')),
-                DataColumn(label: Text('Created At')),
-                DataColumn(label: Text('Sort Num')),
-                DataColumn(label: Text('Updated At')),
-              ],
-              rows: notices.map((NoticeItem notice) {
-                return DataRow(
-                  cells: <DataCell>[
-                    DataCell(Checkbox(
-                      value: checkedMap[notice.id],
-                      onChanged: (value) {
-                        setState(() {
-                          checkedMap[notice.id] = value!;
-                        });
-                      },
-                    )),
-                    DataCell(buildDataCell(context, '${notice.id}', notice)),
-                    DataCell(buildDataCell(context, notice.title, notice)),
-                    DataCell(buildDataCell(context, notice.content, notice)),
-                    DataCell(buildDataCell(context, '${notice.createdAt}', notice)),
-                    DataCell(buildDataCell(context, '${notice.sortNum}', notice)),
-                    DataCell(buildDataCell(context, '${notice.updateAt}', notice)),
-                  ],
-                );
-              }).toList(),
-            ),
-          ),
-        ],
-      ),
+          );
+        }
     );
   }
 
   void deleteSelected() {
     setState(() {
-      notices.removeWhere((notice) => checkedMap[notice.id] == true);
+      noticeList.removeWhere((notice) => checkedMap[notice.id] == true);
     });
   }
 
-  Widget buildDataCell(BuildContext context, String data, NoticeItem notice) {
+  Widget buildDataCell(BuildContext context, String data, PublicNotice notice) {
     return InkWell(
       onTap: () {
         Navigator.push(
