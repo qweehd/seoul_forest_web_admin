@@ -1,7 +1,6 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:seoul_forest_web_admin/data/post_repository.dart';
-
 import '../models/ModelProvider.dart';
 
 class PostViewModel extends ChangeNotifier {
