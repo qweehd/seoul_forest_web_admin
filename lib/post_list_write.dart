@@ -1,5 +1,7 @@
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:seoul_forest_web_admin/post_list.dart';
+
+import 'models/ModelProvider.dart';
 
 class PostListWritePage extends StatefulWidget {
   PostListWritePage({Key? key}) : super(key: key);
@@ -13,11 +15,14 @@ class _PostListWritePageState extends State<PostListWritePage> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
   final TextEditingController _currencyController = TextEditingController();
-  final TextEditingController _mainCategoryIDController = TextEditingController();
-  final TextEditingController _mainCategoryTypeController = TextEditingController();
+  final TextEditingController _mainCategoryIDController =
+      TextEditingController();
+  final TextEditingController _mainCategoryTypeController =
+      TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _statusController = TextEditingController();
-  final TextEditingController _subCategoryIDController = TextEditingController();
+  final TextEditingController _subCategoryIDController =
+      TextEditingController();
   final TextEditingController _userIDController = TextEditingController();
   final TextEditingController _typenameController = TextEditingController();
   final TextEditingController _imageKeysController = TextEditingController();
@@ -39,13 +44,15 @@ class _PostListWritePageState extends State<PostListWritePage> {
             buildTextFormField(_contentController, 'Content'),
             buildTextFormField(_currencyController, 'Currency'),
             buildTextFormField(_mainCategoryIDController, 'Main Category ID'),
-            buildTextFormField(_mainCategoryTypeController, 'Main Category Type'),
+            buildTextFormField(
+                _mainCategoryTypeController, 'Main Category Type'),
             buildTextFormField(_priceController, 'Price'),
             buildTextFormField(_statusController, 'Status'),
             buildTextFormField(_subCategoryIDController, 'Sub Category ID'),
             buildTextFormField(_userIDController, 'User ID'),
             buildTextFormField(_typenameController, '__typename'),
-            buildTextFormField(_imageKeysController, 'Image Keys (comma-separated)'),
+            buildTextFormField(
+                _imageKeysController, 'Image Keys (comma-separated)'),
             SizedBox(height: 20),
             Text('Is Negotiable:'),
             Row(
@@ -82,23 +89,31 @@ class _PostListWritePageState extends State<PostListWritePage> {
             ),
             ElevatedButton(
               onPressed: () {
-                if (_formKey.currentState!.validate() && _isNegotiable != null) {
-                  var postItem = PostItem(
-                    id: DateTime.now().millisecondsSinceEpoch,
+                if (_formKey.currentState!.validate() &&
+                    _isNegotiable != null) {
+                  var postItem = Post(
                     title: _titleController.text,
                     content: _contentController.text,
                     currency: _currencyController.text,
-                    mainCategoryID: int.parse(_mainCategoryIDController.text),
-                    mainCategoryType: _mainCategoryTypeController.text,
-                    price: double.parse(_priceController.text),
+                    mainCategoryType: MainCategoryType.MARKETPLACE,
+                    price: int.parse(_priceController.text),
                     status: _statusController.text,
-                    subCategoryID: int.parse(_subCategoryIDController.text),
-                    userID: _userIDController.text,
-                    typename: _typenameController.text,
+                    subCategory: SubCategory(
+                      id: _subCategoryIDController.text,
+                      name: '',
+                      title: '',
+                      mainCategoryType: MainCategoryType.COMMUNITY,
+                      sortNum: 0,
+                    ),
+                    authorUser: User(
+                        userName: '',
+                        phone: '',
+                        devicePlatform: DevicePlatform.ANDROID,
+                        deviceToken: '',
+                        isCompletelyRegistered: true),
                     imageKeys: _imageKeysController.text.split(','),
                     isNegotiable: _isNegotiable!,
-                    createdAt: DateTime.now(),
-                    updatedAt: DateTime.now(),
+                    createdAt: TemporalDateTime.now(),
                   );
                   Navigator.pop(context, postItem);
                 }

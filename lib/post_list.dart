@@ -1,3 +1,4 @@
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:seoul_forest_web_admin/post_list_edit.dart';
@@ -5,42 +6,6 @@ import 'package:seoul_forest_web_admin/post_list_write.dart';
 
 import 'models/ModelProvider.dart';
 import 'viewmodels/post_viewmodel.dart';
-
-class PostItem {
-  final int id;
-  final String content;
-  final DateTime createdAt;
-  final String currency;
-  final List<String> imageKeys;
-  final bool isNegotiable;
-  final int mainCategoryID;
-  final String mainCategoryType;
-  final double price;
-  final String status;
-  final int subCategoryID;
-  final String title;
-  final DateTime updatedAt;
-  final String userID;
-  final String typename;
-
-  PostItem({
-    required this.id,
-    required this.content,
-    required this.createdAt,
-    required this.currency,
-    required this.imageKeys,
-    required this.isNegotiable,
-    required this.mainCategoryID,
-    required this.mainCategoryType,
-    required this.price,
-    required this.status,
-    required this.subCategoryID,
-    required this.title,
-    required this.updatedAt,
-    required this.userID,
-    required this.typename,
-  });
-}
 
 class PostList extends StatefulWidget {
   const PostList({
@@ -64,12 +29,10 @@ class _PostListState extends State<PostList> {
   @override
   Widget build(BuildContext context) {
     return Consumer<PostViewModel>(builder: (context, viewModel, child) {
-      if (viewModel.postItems.isEmpty) {
-        return Center(child: CircularProgressIndicator());
+      if (viewModel.postLoading) {
+        return const Center(child: CircularProgressIndicator());
       }
-      if (viewModel.postItems != null) {
-        postList = viewModel.postItems;
-      }
+      postList = viewModel.postItems;
       return SingleChildScrollView(
         child: Column(
           children: [
@@ -112,50 +75,63 @@ class _PostListState extends State<PostList> {
                   // 유지됨 (기능에 따라 필요할 수 있음)
                   DataColumn(label: Text('ID')),
                   DataColumn(label: Text('Title')),
+
                   DataColumn(label: Text('Content')),
                   DataColumn(label: Text('Price')),
                   DataColumn(label: Text('Currency')),
-                  DataColumn(label: Text('Status')),
+
                   DataColumn(label: Text('Created At')),
                   DataColumn(label: Text('Is Negotiable')),
                   DataColumn(label: Text('Image Keys')),
+
                   DataColumn(label: Text('Main Category Type')),
                   DataColumn(label: Text('Sub Category ID')),
                   DataColumn(label: Text('City ID')),
+
                   DataColumn(label: Text('Country ID')),
                   DataColumn(label: Text('Updated At')),
+                  DataColumn(label: Text('Author User ID')),
                   // '__type
                 ],
                 rows: postList.map((Post post) {
                   return DataRow(
                     cells: <DataCell>[
                       DataCell(Checkbox(
-                        value: checkedMap[post.id],
+                        value: checkedMap[post.id] ?? false,
                         onChanged: (value) {
                           setState(() {
                             checkedMap[post.id] = value!;
                           });
                         },
                       )),
-                      DataCell(buildDataCell(context, '${post.id}', post)),
+                      DataCell(buildDataCell(context, post.id, post)),
                       DataCell(buildDataCell(context, post.content, post)),
-                      DataCell(
-                          buildDataCell(context, '${post.createdAt}', post)),
+
+                      DataCell(buildDataCell(
+                          context, post.createdAt.toString(), post)),
                       DataCell(buildDataCell(context, post.currency!, post)),
-                      DataCell(
-                          buildDataCell(context, '${post.imageKeys}', post)),
+                      DataCell(buildDataCell(context,
+                          post.imageKeys != null && post.imageKeys!.isNotEmpty
+                              ? post.imageKeys!.first.toString()
+                              : "",
+                          post)),
+
                       DataCell(
                           buildDataCell(context, '${post.isNegotiable}', post)),
                       DataCell(buildDataCell(
                           context, post.mainCategoryType.toString(), post)),
                       DataCell(buildDataCell(context, '${post.price}', post)),
+
                       DataCell(buildDataCell(
                           context, '${post.subCategory?.id}', post)),
                       DataCell(buildDataCell(context, post.title, post)),
                       DataCell(
                           buildDataCell(context, '${post.updatedAt}', post)),
-                      DataCell(
-                          buildDataCell(context, post.authorUser!.id, post)),
+
+                      DataCell(buildDataCell(context, post.city!.id, post)),
+                      DataCell(buildDataCell(context, post.country!.id, post)),
+                      DataCell(buildDataCell(
+                          context, post.authorUser?.id ?? "", post)),
                     ],
                   );
                 }).toList(),
