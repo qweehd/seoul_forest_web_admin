@@ -11,8 +11,14 @@ import 'package:seoul_forest_web_admin/report_list.dart';
 import 'package:seoul_forest_web_admin/report_list_item.dart';
 import 'package:seoul_forest_web_admin/user_list.dart';
 import 'package:seoul_forest_web_admin/user_list_item.dart';
+import 'package:seoul_forest_web_admin/viewmodels/notice_viewmodel.dart';
 import 'package:seoul_forest_web_admin/viewmodels/post_viewmodel.dart';
+import 'package:seoul_forest_web_admin/viewmodels/report_viewmodel.dart';
+import 'package:seoul_forest_web_admin/viewmodels/user_viewmodel.dart';
 import 'amplifyconfiguration.dart';
+import 'data/notice_repository.dart';
+import 'data/report_repository.dart';
+import 'data/user_repository.dart';
 import 'models/ModelProvider.dart';
 
 void main() async {
@@ -22,6 +28,12 @@ void main() async {
     providers: [
       ChangeNotifierProvider(
           create: (context) => PostViewModel(postRepository: PostRepository())),
+      ChangeNotifierProvider(
+          create: (context) => NoticeViewModel(noticeRepository: NoticeRepository())),
+      ChangeNotifierProvider(
+          create: (context) => UserViewModel(userRepository: UserRepository())),
+      ChangeNotifierProvider(
+          create: (context) => ReportViewModel(reportRepository: ReportRepository())),
     ],
     child: const MyApp(),
   ));
@@ -65,11 +77,9 @@ class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
   final _pages = [
     const PostList(),
-    PublicNoticeList(
-      noticeItems: getNoticeItems(),
-    ),
-    UserList(userItems: getUserItems()),
-    ReportList(reportItems: getReportItems())
+    PublicNoticeList(),
+    UserList(),
+    ReportList()
   ];
 
   @override
@@ -126,7 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
               title: const Text('공지사항'),
               onTap: () {
                 setState(() {
-                  _currentIndex = 0;
+                  _currentIndex = 1;
                 });
                 Navigator.of(context).pop();
               },
@@ -136,7 +146,7 @@ class _MyHomePageState extends State<MyHomePage> {
               title: const Text('게시물관리'),
               onTap: () {
                 setState(() {
-                  _currentIndex = 1;
+                  _currentIndex = 0;
                 });
                 Navigator.of(context).pop();
               },
@@ -164,7 +174,10 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      body: _pages[_currentIndex],
+      body:SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: _pages[_currentIndex],
+      ),
     );
   }
 }
