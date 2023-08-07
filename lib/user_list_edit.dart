@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:seoul_forest_web_admin/user_list.dart';
+import 'models/ModelProvider.dart';
 
 class UserListEditPage extends StatefulWidget {
-  final UserItem useritem;
+  final User useritem;
 
   const UserListEditPage({Key? key, required this.useritem}) : super(key: key);
 
@@ -27,16 +28,15 @@ class _UserListEditPageState extends State<UserListEditPage> {
   void initState() {
     super.initState();
     _idController = TextEditingController(text: '${widget.useritem.id}');
-    _cityIDController = TextEditingController(text: '${widget.useritem.cityID}');
+    _cityIDController = TextEditingController(text: '${widget.useritem.city}');
     _createdAtController = TextEditingController(text: '${widget.useritem.createdAt}');
-    _devicePlatformController = TextEditingController(text: widget.useritem.devicePlatform);
+    _devicePlatformController = TextEditingController(text: '${widget.useritem.devicePlatform}');
     _deviceTokenController = TextEditingController(text: widget.useritem.deviceToken);
     _imageKeyController = TextEditingController(text: widget.useritem.imageKey);
     _isCompletelyRegisteredController = TextEditingController(text: '${widget.useritem.isCompletelyRegistered}');
     _phoneController = TextEditingController(text: widget.useritem.phone);
     _updatedAtController = TextEditingController(text: '${widget.useritem.updatedAt}');
     _userNameController = TextEditingController(text: widget.useritem.userName);
-    _typenameController = TextEditingController(text: widget.useritem.typename);
   }
 
   @override

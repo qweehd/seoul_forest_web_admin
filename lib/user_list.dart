@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:seoul_forest_web_admin/user_list_edit.dart';
 import 'package:seoul_forest_web_admin/user_list_write.dart'; // 이 페이지를 작성해야 합니다.
+import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'viewmodels/user_viewmodel.dart';
+import 'models/ModelProvider.dart';
 
 class UserItem {
   final int id;
@@ -31,115 +36,134 @@ class UserItem {
 }
 
 class UserList extends StatefulWidget {
-  final List<UserItem> userItems;
-
-  const UserList({Key? key, required this.userItems}) : super(key: key);
+  const UserList({
+    Key? key,
+  }) : super(key: key);
 
   @override
-  _UserListState createState() => _UserListState();
+  State<UserList> createState() => _UserListState();
 }
 
 class _UserListState extends State<UserList> {
-  late Map<int, bool> checkedMap;
-  late List<UserItem> useritems;
+  late Map<String, bool> checkedMap;
+  late List<User> userList;
 
   @override
   void initState() {
     super.initState();
-    checkedMap = {for (var i = 0; i < 10; i++) i: false};
-    useritems = widget.userItems;
+    checkedMap = {};
   }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: 10, bottom: 10, right: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+    return Consumer<UserViewModel>(builder: (context, viewModel, child) {
+      if (viewModel.userItems.isEmpty) {
+        return Center(child: CircularProgressIndicator());
+      }
+      if (viewModel.userItems != null) {
+        userList = viewModel.userItems;
+      }
+          return SingleChildScrollView(
+            child: Column(
               children: [
-                ElevatedButton(
-                  child: Text('추가하기'),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => UserWritePage()),
-                    ).then((newUserItem) {
-                      if (newUserItem != null) {
-                        setState(() {
-                          useritems.add(newUserItem); // 새로운 Notice를 목록에 추가
-                        });
-                      }
-                    });
-                    // Add your '추가하기' button action here
-                  },
+                Padding(
+                  padding: EdgeInsets.only(top: 10, bottom: 10, right: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton(
+                        child: Text('추가하기'),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => UserWritePage()),
+                          ).then((newUserItem) {
+                            if (newUserItem != null) {
+                              setState(() {
+                                userList.add(newUserItem); // 새로운 Notice를 목록에 추가
+                              });
+                            }
+                          });
+                        },
+                      ),
+                      SizedBox(width: 10),
+                      // This gives some space between the buttons
+                      ElevatedButton(
+                        child: Text('삭제하기'),
+                        onPressed: deleteSelected,
+                      ),
+                    ],
+                  ),
                 ),
-                SizedBox(width: 10), // This gives some space between the buttons
-                ElevatedButton(
-                  child: Text('삭제하기'),
-                  onPressed: deleteSelected,
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: DataTable(
+                    columns: const <DataColumn>[
+                      DataColumn(label: Text('Select')),
+                      DataColumn(label: Text('ID')),
+                      DataColumn(label: Text('City ID')),
+                      DataColumn(label: Text('Created At')),
+                      DataColumn(label: Text('Device Platform')),
+                      DataColumn(label: Text('Device Token')),
+                      DataColumn(label: Text('Image Key')),
+                      DataColumn(label: Text('Is Completely Registered')),
+                      DataColumn(label: Text('Phone')),
+                      DataColumn(label: Text('Updated At')),
+                      DataColumn(label: Text('User Name')),
+                      DataColumn(label: Text('typename')),
+                    ],
+                    rows: userList.map((User useritem) {
+                      return DataRow(
+                        cells: <DataCell>[
+                          DataCell(Checkbox(
+                            value: checkedMap[useritem.id],
+                            onChanged: (value) {
+                              setState(() {
+                                checkedMap[useritem.id] = value!;
+                              });
+                            },
+                          )),
+                          DataCell(buildDataCell(
+                              context, '${useritem.id}', useritem)),
+                          DataCell(buildDataCell(
+                              context, '${useritem.city}', useritem)),
+                          DataCell(buildDataCell(
+                              context, '${useritem.createdAt}', useritem)),
+                          DataCell(buildDataCell(
+                              context, '${useritem.devicePlatform}', useritem)),
+                          DataCell(buildDataCell(
+                              context, useritem.deviceToken, useritem)),
+                          DataCell(buildDataCell(
+                              context, '${useritem.imageKey}', useritem)),
+                          DataCell(buildDataCell(
+                              context, '${useritem.isCompletelyRegistered}',
+                              useritem)),
+                          DataCell(
+                              buildDataCell(context, useritem.phone, useritem)),
+                          DataCell(buildDataCell(
+                              context, '${useritem.updatedAt}', useritem)),
+                          DataCell(buildDataCell(
+                              context, useritem.userName, useritem)),
+                        ],
+                      );
+                    }).toList(),
+                  ),
                 ),
               ],
             ),
-          ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: DataTable(
-              columns: const <DataColumn>[
-                DataColumn(label: Text('Select')),
-                DataColumn(label: Text('ID')),
-                DataColumn(label: Text('City ID')),
-                DataColumn(label: Text('Created At')),
-                DataColumn(label: Text('Device Platform')),
-                DataColumn(label: Text('Device Token')),
-                DataColumn(label: Text('Image Key')),
-                DataColumn(label: Text('Is Completely Registered')),
-                DataColumn(label: Text('Phone')),
-                DataColumn(label: Text('Updated At')),
-                DataColumn(label: Text('User Name')),
-                DataColumn(label: Text('typename')),
-              ],
-              rows: useritems.map((UserItem useritem) {
-                return DataRow(
-                  cells: <DataCell>[
-                    DataCell(Checkbox(
-                      value: checkedMap[useritem.id],
-                      onChanged: (value) {
-                        setState(() {
-                          checkedMap[useritem.id] = value!;
-                        });
-                      },
-                    )),
-                    DataCell(buildDataCell(context, '${useritem.id}', useritem)),
-                    DataCell(buildDataCell(context, '${useritem.cityID}', useritem)),
-                    DataCell(buildDataCell(context, '${useritem.createdAt}', useritem)),
-                    DataCell(buildDataCell(context, useritem.devicePlatform, useritem)),
-                    DataCell(buildDataCell(context, useritem.deviceToken, useritem)),
-                    DataCell(buildDataCell(context, useritem.imageKey, useritem)),
-                    DataCell(buildDataCell(context, '${useritem.isCompletelyRegistered}', useritem)),
-                    DataCell(buildDataCell(context, useritem.phone, useritem)),
-                    DataCell(buildDataCell(context, '${useritem.updatedAt}', useritem)),
-                    DataCell(buildDataCell(context, useritem.userName, useritem)),
-                    DataCell(buildDataCell(context, useritem.typename, useritem)),
-                  ],
-                );
-              }).toList(),
-            ),
-          ),
-        ],
-      ),
+          );
+        }
     );
   }
 
   void deleteSelected() {
     setState(() {
-      useritems.removeWhere((useritem) => checkedMap[useritem.id] == true);
+      userList.removeWhere((useritem) => checkedMap[useritem.id] == true);
     });
   }
 
-  Widget buildDataCell(BuildContext context, String data, UserItem useritem) {
+  Widget buildDataCell(BuildContext context, String data, User useritem) {
     return InkWell(
       onTap: () {
         Navigator.push(
