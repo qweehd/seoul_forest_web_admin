@@ -14,11 +14,14 @@ class PostViewModel extends ChangeNotifier {
 
   List<Post> get postItems => _postItems;
 
-  Future<void> queryPostItems() async {
-    final postList = await _postRepository.queryListItems();
-    safePrint('postList: $postList');
-    _postItems = postList.map((e) => e as Post).toList();
-    notifyListeners();
-  }
+  bool postLoading = false;
 
+  Future<void> queryPostItems() async {
+    postLoading = true;
+    Future.microtask(() => notifyListeners());
+    final postList = await _postRepository.queryListItems();
+    _postItems = postList.map((e) => e as Post).toList();
+    postLoading = false;
+    Future.microtask(() => notifyListeners());
+  }
 }
