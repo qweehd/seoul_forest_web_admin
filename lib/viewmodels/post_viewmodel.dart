@@ -10,7 +10,6 @@ class PostViewModel extends ChangeNotifier {
       : _postRepository = postRepository;
 
   List<Post> _postItems = [];
-
   List<Post> get postItems => _postItems;
 
   bool postLoading = false;

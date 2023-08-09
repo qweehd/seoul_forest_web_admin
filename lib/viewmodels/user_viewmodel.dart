@@ -15,7 +15,7 @@ class UserViewModel extends ChangeNotifier {
 
   bool userLoading = false;
 
-  Future<void> queryPostItems() async {
+  Future<void> queryUserItems() async {
     userLoading = true;
     Future.microtask(() => notifyListeners());
     final userList = await _userRepository.queryListItems();

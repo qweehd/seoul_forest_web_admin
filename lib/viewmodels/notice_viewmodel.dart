@@ -15,7 +15,7 @@ class NoticeViewModel extends ChangeNotifier {
 
   bool noticeLoading = false;
 
-  Future<void> queryPostItems() async {
+  Future<void> queryNoticeItems() async {
     noticeLoading = true;
     Future.microtask(() => notifyListeners());
     final noticeList = await _noticeRepository.queryListItems();
