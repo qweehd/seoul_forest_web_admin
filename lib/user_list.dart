@@ -7,34 +7,6 @@ import 'package:provider/provider.dart';
 import 'viewmodels/user_viewmodel.dart';
 import 'models/ModelProvider.dart';
 
-class UserItem {
-  final int id;
-  final int cityID;
-  final DateTime createdAt;
-  final String devicePlatform;
-  final String deviceToken;
-  final String imageKey;
-  final bool isCompletelyRegistered;
-  final String phone;
-  final DateTime updatedAt;
-  final String userName;
-  final String typename;
-
-  UserItem({
-    required this.id,
-    required this.cityID,
-    required this.createdAt,
-    required this.devicePlatform,
-    required this.deviceToken,
-    required this.imageKey,
-    required this.isCompletelyRegistered,
-    required this.phone,
-    required this.updatedAt,
-    required this.userName,
-    required this.typename,
-  });
-}
-
 class UserList extends StatefulWidget {
   const UserList({
     Key? key,
@@ -57,12 +29,10 @@ class _UserListState extends State<UserList> {
   @override
   Widget build(BuildContext context) {
     return Consumer<UserViewModel>(builder: (context, viewModel, child) {
-      if (viewModel.userItems.isEmpty) {
-        return Center(child: CircularProgressIndicator());
+      if (viewModel.userLoading) {
+        return const Center(child: CircularProgressIndicator());
       }
-      if (viewModel.userItems != null) {
-        userList = viewModel.userItems;
-      }
+      userList = viewModel.userItems;
           return SingleChildScrollView(
             child: Column(
               children: [
@@ -93,6 +63,7 @@ class _UserListState extends State<UserList> {
                         child: Text('삭제하기'),
                         onPressed: deleteSelected,
                       ),
+                      SizedBox(width: 10),
                     ],
                   ),
                 ),
@@ -101,50 +72,60 @@ class _UserListState extends State<UserList> {
                   child: DataTable(
                     columns: const <DataColumn>[
                       DataColumn(label: Text('Select')),
+
                       DataColumn(label: Text('ID')),
                       DataColumn(label: Text('City ID')),
+
                       DataColumn(label: Text('Created At')),
                       DataColumn(label: Text('Device Platform')),
                       DataColumn(label: Text('Device Token')),
+
                       DataColumn(label: Text('Image Key')),
                       DataColumn(label: Text('Is Completely Registered')),
                       DataColumn(label: Text('Phone')),
+
                       DataColumn(label: Text('Updated At')),
                       DataColumn(label: Text('User Name')),
                       DataColumn(label: Text('typename')),
                     ],
-                    rows: userList.map((User useritem) {
+                    rows: userList.map((User user) {
                       return DataRow(
                         cells: <DataCell>[
                           DataCell(Checkbox(
-                            value: checkedMap[useritem.id],
+                            value: checkedMap[user.id] ?? false,
                             onChanged: (value) {
                               setState(() {
-                                checkedMap[useritem.id] = value!;
+                                checkedMap[user.id] = value!;
                               });
                             },
                           )),
+
                           DataCell(buildDataCell(
-                              context, '${useritem.id}', useritem)),
+                              context, '${user.id}', user)),
                           DataCell(buildDataCell(
-                              context, '${useritem.city}', useritem)),
+                              context, '${user.city}', user)),
+
                           DataCell(buildDataCell(
-                              context, '${useritem.createdAt}', useritem)),
+                              context, '${user.createdAt}', user)),
                           DataCell(buildDataCell(
-                              context, '${useritem.devicePlatform}', useritem)),
+                              context, '${user.devicePlatform}', user)),
                           DataCell(buildDataCell(
-                              context, useritem.deviceToken, useritem)),
+                              context, user.deviceToken, user)),
+
                           DataCell(buildDataCell(
-                              context, '${useritem.imageKey}', useritem)),
+                              context, '${user.imageKey}', user)),
                           DataCell(buildDataCell(
-                              context, '${useritem.isCompletelyRegistered}',
-                              useritem)),
+                              context, '${user.isCompletelyRegistered}',
+                              user)),
                           DataCell(
-                              buildDataCell(context, useritem.phone, useritem)),
+                              buildDataCell(context, user.phone, user)),
+
                           DataCell(buildDataCell(
-                              context, '${useritem.updatedAt}', useritem)),
+                              context, '${user.updatedAt}', user)),
                           DataCell(buildDataCell(
-                              context, useritem.userName, useritem)),
+                              context, user.userName, user)),
+                          DataCell(buildDataCell(
+                              context, 'User', user)),
                         ],
                       );
                     }).toList(),
@@ -168,10 +149,14 @@ class _UserListState extends State<UserList> {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => UserListEditPage(useritem: useritem)), // 이 페이지를 작성해야 합니다.
+          MaterialPageRoute(
+              builder: (context) => UserListEditPage(useritem: useritem)), // 이 페이지를 작성해야 합니다.
         );
       },
-      child: Text(data),
+      child: SizedBox(
+        width: 220,
+        child: Text(data),
+      ),
     );
   }
 }

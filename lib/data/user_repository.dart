@@ -7,7 +7,9 @@ class UserRepository {
   Future<List<User?>> queryListItems() async {
     try {
       final request = ModelQueries.list(User.classType);
-      final response = await Amplify.API.query(request: request).response;
+      final response = await Amplify.API
+          .query(request: request)
+          .response;
 
       final userList = response.data?.items;
       if (userList == null) {

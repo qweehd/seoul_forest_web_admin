@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:seoul_forest_web_admin/user_list.dart'; // 필요한 Notice 클래스를 불러오기 위해 사용합니다.
+import 'package:seoul_forest_web_admin/user_list.dart';
+
+import 'models/DevicePlatform.dart';
+import 'models/User.dart'; // 필요한 Notice 클래스를 불러오기 위해 사용합니다.
 
 class UserWritePage extends StatefulWidget {
   UserWritePage({Key? key}) : super(key: key);
@@ -81,19 +84,12 @@ class _UserWritePageState extends State<UserWritePage> {
             ElevatedButton(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  var userItem = UserItem(
-                    id: DateTime.now().millisecondsSinceEpoch,
-                    cityID: int.parse(_cityIDController.text),
-                    createdAt: DateTime.now(),
-                    deviceToken: _deviceTokenController.text,
-                    imageKey: _imageKeyController.text,
-                    phone: _phoneController.text,
-                    updatedAt: DateTime.now(),
-                    userName: _userNameController.text,
-                    typename: _typenameController.text,
-                    devicePlatform: _devicePlatformController.text,
-                    isCompletelyRegistered: _isCompletelyRegistered!,
-                  );
+                  var userItem = User(
+                      userName: '',
+                      phone: '',
+                      devicePlatform: DevicePlatform.ANDROID,
+                      deviceToken: '',
+                      isCompletelyRegistered: true);
                   Navigator.pop(context, userItem);
                 }
               },

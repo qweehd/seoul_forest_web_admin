@@ -4,13 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:seoul_forest_web_admin/data/post_repository.dart';
 import 'package:seoul_forest_web_admin/post_list.dart';
-import 'package:seoul_forest_web_admin/post_list_item.dart';
 import 'package:seoul_forest_web_admin/public_notice.dart';
-import 'package:seoul_forest_web_admin/public_notice_item.dart';
 import 'package:seoul_forest_web_admin/report_list.dart';
-import 'package:seoul_forest_web_admin/report_list_item.dart';
 import 'package:seoul_forest_web_admin/user_list.dart';
-import 'package:seoul_forest_web_admin/user_list_item.dart';
 import 'package:seoul_forest_web_admin/viewmodels/notice_viewmodel.dart';
 import 'package:seoul_forest_web_admin/viewmodels/post_viewmodel.dart';
 import 'package:seoul_forest_web_admin/viewmodels/report_viewmodel.dart';
@@ -29,11 +25,13 @@ void main() async {
       ChangeNotifierProvider(
           create: (context) => PostViewModel(postRepository: PostRepository())),
       ChangeNotifierProvider(
-          create: (context) => NoticeViewModel(noticeRepository: NoticeRepository())),
+          create: (context) =>
+              NoticeViewModel(noticeRepository: NoticeRepository())),
       ChangeNotifierProvider(
           create: (context) => UserViewModel(userRepository: UserRepository())),
       ChangeNotifierProvider(
-          create: (context) => ReportViewModel(reportRepository: ReportRepository())),
+          create: (context) =>
+              ReportViewModel(reportRepository: ReportRepository())),
     ],
     child: const MyApp(),
   ));
@@ -77,15 +75,18 @@ class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
   final _pages = [
     const PostList(),
-    PublicNoticeList(),
-    UserList(),
-    ReportList()
+    const PublicNoticeList(),
+    const UserList(),
+    const ReportList()
   ];
 
   @override
   void initState() {
     super.initState();
     Provider.of<PostViewModel>(context, listen: false).queryPostItems();
+    Provider.of<NoticeViewModel>(context, listen: false).queryNoticeItems();
+    Provider.of<UserViewModel>(context, listen: false).queryUserItems();
+    Provider.of<ReportViewModel>(context, listen: false).queryReportItems();
   }
 
   @override
@@ -119,15 +120,15 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: EdgeInsets.zero,
           children: <Widget>[
             const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
               child: Text(
                 '서울숲',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 24,
                 ),
-              ),
-              decoration: BoxDecoration(
-                color: Colors.blue,
               ),
             ),
             const SizedBox(height: 10),
@@ -174,7 +175,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      body:SingleChildScrollView(
+      body: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: _pages[_currentIndex],
       ),

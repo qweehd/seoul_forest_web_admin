@@ -22,7 +22,7 @@ class _UserListEditPageState extends State<UserListEditPage> {
   late TextEditingController _phoneController;
   late TextEditingController _updatedAtController;
   late TextEditingController _userNameController;
-  late TextEditingController _typenameController;
+  late TextEditingController _typeController;
 
   @override
   void initState() {
@@ -37,6 +37,7 @@ class _UserListEditPageState extends State<UserListEditPage> {
     _phoneController = TextEditingController(text: widget.useritem.phone);
     _updatedAtController = TextEditingController(text: '${widget.useritem.updatedAt}');
     _userNameController = TextEditingController(text: widget.useritem.userName);
+    _typeController = TextEditingController(text: 'User');
   }
 
   @override
@@ -51,7 +52,7 @@ class _UserListEditPageState extends State<UserListEditPage> {
     _phoneController.dispose();
     _updatedAtController.dispose();
     _userNameController.dispose();
-    _typenameController.dispose();
+    _typeController.dispose();
     super.dispose();
   }
 
@@ -76,7 +77,7 @@ class _UserListEditPageState extends State<UserListEditPage> {
               buildTextField(_phoneController, 'Phone'),
               buildTextField(_updatedAtController, 'Updated At'),
               buildTextField(_userNameController, 'User Name'),
-              buildTextField(_typenameController, '__typename'),
+              buildTextField(_typeController, 'typename'),
               ElevatedButton(
                 onPressed: () {
                   // Implement the update logic here
@@ -90,7 +91,7 @@ class _UserListEditPageState extends State<UserListEditPage> {
                   print('Updated Phone: ${_phoneController.text}');
                   print('Updated Updated At: ${_updatedAtController.text}');
                   print('Updated User Name: ${_userNameController.text}');
-                  print('Updated __typename: ${_typenameController.text}');
+                  print('Updated __typename: ${_typeController.text}');
                 },
                 child: Text('Update'),
               ),
