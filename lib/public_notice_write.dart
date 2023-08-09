@@ -1,5 +1,8 @@
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:seoul_forest_web_admin/public_notice.dart'; // 필요한 Notice 클래스를 불러오기 위해 사용합니다.
+import 'package:seoul_forest_web_admin/public_notice.dart';
+
+import 'models/PublicNotice.dart'; // 필요한 Notice 클래스를 불러오기 위해 사용합니다.
 
 class PublicNoticeWritePage extends StatefulWidget {
   PublicNoticeWritePage({Key? key}) : super(key: key);
@@ -38,13 +41,13 @@ class _PublicNoticeWritePageState extends State<PublicNoticeWritePage> {
             ElevatedButton(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  var noticeItem = NoticeItem(
-                    id: DateTime.now().millisecondsSinceEpoch,
+                  var noticeItem = PublicNotice(
+                    id: _idController.text,
                     title: _titleController.text,
                     content: _contentController.text,
                     sortNum: int.parse(_sortNumController.text),
-                    createdAt: DateTime.now(),
-                    updateAt: DateTime.now(),
+                    createdAt: TemporalDateTime.now(),
+                    updatedAt: TemporalDateTime.now(),
                   );
                   Navigator.pop(context, noticeItem);
                 }

@@ -5,24 +5,6 @@ import 'package:seoul_forest_web_admin/public_notice_write.dart';
 import 'package:provider/provider.dart';
 import 'viewmodels/notice_viewmodel.dart';
 
-class NoticeItem {
-  final int id;
-  final String content;
-  final DateTime createdAt;
-  final int sortNum;
-  final String title;
-  final DateTime updateAt;
-
-  NoticeItem({
-    required this.id,
-    required this.content,
-    required this.createdAt,
-    required this.sortNum,
-    required this.title,
-    required this.updateAt,
-  });
-}
-
 class PublicNoticeList extends StatefulWidget {
   const PublicNoticeList({
     Key? key,
@@ -45,12 +27,10 @@ class _PublicNoticeListState extends State<PublicNoticeList> {
   @override
   Widget build(BuildContext context) {
     return Consumer<NoticeViewModel>(builder: (context, viewModel, child) {
-      if (viewModel.noticeItems.isEmpty) {
-        return Center(child: CircularProgressIndicator());
+      if (viewModel.noticeLoading) {
+        return const Center(child: CircularProgressIndicator());
       }
-      if (viewModel.noticeItems != null) {
-        noticeList = viewModel.noticeItems;
-      }
+      noticeList = viewModel.noticeItems;
       return SingleChildScrollView(
             child: Column(
               children: [
@@ -90,9 +70,11 @@ class _PublicNoticeListState extends State<PublicNoticeList> {
                   child: DataTable(
                     columns: const <DataColumn>[
                       DataColumn(label: Text('Select')),
+
                       DataColumn(label: Text('ID')),
                       DataColumn(label: Text('Title')),
                       DataColumn(label: Text('Content')),
+
                       DataColumn(label: Text('Created At')),
                       DataColumn(label: Text('Sort Num')),
                       DataColumn(label: Text('Updated At')),
@@ -101,19 +83,21 @@ class _PublicNoticeListState extends State<PublicNoticeList> {
                       return DataRow(
                         cells: <DataCell>[
                           DataCell(Checkbox(
-                            value: checkedMap[notice.id],
+                            value: checkedMap[notice.id] ?? false,
                             onChanged: (value) {
                               setState(() {
                                 checkedMap[notice.id] = value!;
                               });
                             },
                           )),
+
                           DataCell(
                               buildDataCell(context, '${notice.id}', notice)),
                           DataCell(
                               buildDataCell(context, notice.title, notice)),
                           DataCell(
                               buildDataCell(context, notice.content, notice)),
+
                           DataCell(buildDataCell(
                               context, '${notice.createdAt}', notice)),
                           DataCell(buildDataCell(
@@ -146,7 +130,10 @@ class _PublicNoticeListState extends State<PublicNoticeList> {
           MaterialPageRoute(builder: (context) => EditNoticePage(notice: notice)),
         );
       },
-      child: Text(data),
+      child: SizedBox(
+        width: 220,
+        child: Text(data),
+      ),
     );
   }
 }

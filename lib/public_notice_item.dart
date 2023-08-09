@@ -1,6 +1,7 @@
 
 import 'package:seoul_forest_web_admin/public_notice.dart';
 
+/*
 List<NoticeItem> getNoticeItems() {
   return [
     NoticeItem(
@@ -22,3 +23,4 @@ List<NoticeItem> getNoticeItems() {
     // 추가하고 싶은 다른 PostItem들을 생성하여 추가합니다.
   ];
 }
+*/
