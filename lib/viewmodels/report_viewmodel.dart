@@ -15,7 +15,7 @@ class ReportViewModel extends ChangeNotifier {
 
   bool reportLoading = false;
 
-  Future<void> queryPostItems() async {
+  Future<void> queryReportItems() async {
     reportLoading = true;
     Future.microtask(() => notifyListeners());
     final reportList = await _reportRepository.queryListItems();
