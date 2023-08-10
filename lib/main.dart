@@ -3,6 +3,7 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:seoul_forest_web_admin/data/post_repository.dart';
+import 'package:seoul_forest_web_admin/first_page.dart';
 import 'package:seoul_forest_web_admin/post_list.dart';
 import 'package:seoul_forest_web_admin/public_notice.dart';
 import 'package:seoul_forest_web_admin/report_list.dart';
@@ -74,8 +75,9 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
   final _pages = [
-    const PostList(),
+    FirstPage(),
     const PublicNoticeList(),
+    const PostList(),
     const UserList(),
     const ReportList()
   ];
@@ -93,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('서울숲 관리자 페이지'),
+        title: const Text('관리자 페이지'),
         actions: <Widget>[
           TextButton(
             child: const Row(
@@ -119,15 +121,24 @@ class _MyHomePageState extends State<MyHomePage> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-              child: Text(
-                '서울숲',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
+            InkWell(
+              onTap: () {
+                // DrawerHeader를 눌렀을 때 FirstPage로 이동하는 코드
+                setState(() {
+                  _currentIndex = 0;
+                });
+                Navigator.of(context).pop(); // Drawer를 닫음
+              },
+              child: const DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                ),
+                child: Text(
+                  '서울숲',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                  ),
                 ),
               ),
             ),
@@ -147,7 +158,7 @@ class _MyHomePageState extends State<MyHomePage> {
               title: const Text('게시물관리'),
               onTap: () {
                 setState(() {
-                  _currentIndex = 0;
+                  _currentIndex = 2;
                 });
                 Navigator.of(context).pop();
               },
@@ -157,7 +168,7 @@ class _MyHomePageState extends State<MyHomePage> {
               title: const Text('사용자관리'),
               onTap: () {
                 setState(() {
-                  _currentIndex = 2;
+                  _currentIndex = 3;
                 });
                 Navigator.of(context).pop();
               },
@@ -167,7 +178,7 @@ class _MyHomePageState extends State<MyHomePage> {
               title: const Text('사용자신고관리'),
               onTap: () {
                 setState(() {
-                  _currentIndex = 3;
+                  _currentIndex = 4;
                 });
                 Navigator.of(context).pop();
               },
