@@ -33,13 +33,14 @@ class _PostListState extends State<PostList> {
         return const Center(child: CircularProgressIndicator());
       }
       postList = viewModel.postItems;
-      return SingleChildScrollView(
+      return SingleChildScrollView(  // This is the vertical scroll
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: 10, bottom: 10, left: 10),
+              padding: EdgeInsets.only(top: 10, left: 10),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   ElevatedButton(
                     child: Text('추가하기'),
@@ -58,7 +59,6 @@ class _PostListState extends State<PostList> {
                     },
                   ),
                   SizedBox(width: 10),
-                  // This gives some space between the buttons
                   ElevatedButton(
                     child: Text('삭제하기'),
                     onPressed: deleteSelected,
@@ -67,7 +67,7 @@ class _PostListState extends State<PostList> {
                 ],
               ),
             ),
-            SingleChildScrollView(
+            SingleChildScrollView(  // This is the horizontal scroll
               scrollDirection: Axis.horizontal,
               child: DataTable(
                 columns: const <DataColumn>[

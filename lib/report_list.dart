@@ -36,9 +36,10 @@ class _ReportListState extends State<ReportList> {
       reportList = viewModel.reportItems;
       return SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: 10, bottom: 10, right: 10),
+              padding: EdgeInsets.only(top: 10, left: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
