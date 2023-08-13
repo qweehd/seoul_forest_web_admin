@@ -33,6 +33,7 @@ class _PostListState extends State<PostList> {
         return const Center(child: CircularProgressIndicator());
       }
       postList = viewModel.postItems;
+      postList.sort((a, b) => b.createdAt.compareTo(a.createdAt));
       return SingleChildScrollView(  // This is the vertical scroll
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

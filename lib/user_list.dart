@@ -33,7 +33,8 @@ class _UserListState extends State<UserList> {
         return const Center(child: CircularProgressIndicator());
       }
       userList = viewModel.userItems;
-          return SingleChildScrollView(
+      userList.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      return SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

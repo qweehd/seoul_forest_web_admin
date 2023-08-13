@@ -74,7 +74,13 @@ class _FirstPageState extends State<FirstPage> {
                     DataCell(
                         buildNoticeDataCell(context, notice.title, notice)),
                     DataCell(
-                      buildNoticeDataCell(context, notice.content, notice)),
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: 300,  // 최대 너비를 100픽셀로 제한
+                        ),
+                        child: buildNoticeDataCell(context, notice.content, notice),
+                      ),
+                    ),
                     DataCell(
                       ConstrainedBox(
                         constraints: BoxConstraints(
@@ -149,7 +155,7 @@ class _FirstPageState extends State<FirstPage> {
                       DataCell(
                         ConstrainedBox(
                           constraints: BoxConstraints(
-                            maxWidth: 140,  // 최대 너비를 100픽셀로 제한
+                            maxWidth: 90,  // 최대 너비를 100픽셀로 제한
                           ),
                           child: buildDataCell(context, getFormattedMainCategory(post.mainCategoryType), post),
                         ),
@@ -158,7 +164,7 @@ class _FirstPageState extends State<FirstPage> {
                       DataCell(
                         ConstrainedBox(
                           constraints: BoxConstraints(
-                            maxWidth: 100,  // 최대 너비를 100픽셀로 제한
+                            maxWidth: 90,  // 최대 너비를 100픽셀로 제한
                           ),
                           child: buildDataCell(context, getFormattedSubCategory(post.subCategory?.id), post),
                         ),
@@ -309,7 +315,7 @@ class _FirstPageState extends State<FirstPage> {
                             DataCell(
                               ConstrainedBox(
                                 constraints: BoxConstraints(
-                                  maxWidth: 100,  // 최대 너비를 100픽셀로 제한
+                                  maxWidth: 90,  // 최대 너비를 100픽셀로 제한
                                 ),
                                 child: buildReportDataCell(context, '${reportitem.reportedUser?.userName}', reportitem),
                               ),
@@ -317,7 +323,7 @@ class _FirstPageState extends State<FirstPage> {
                             DataCell(
                               ConstrainedBox(
                                 constraints: BoxConstraints(
-                                  maxWidth: 100,  // 최대 너비를 100픽셀로 제한
+                                  maxWidth: 90,  // 최대 너비를 100픽셀로 제한
                                 ),
                                 child: buildReportDataCell(context, '${reportitem.reporter?.userName}', reportitem),
                               ),
