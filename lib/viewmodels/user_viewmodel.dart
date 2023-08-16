@@ -20,6 +20,7 @@ class UserViewModel extends ChangeNotifier {
     Future.microtask(() => notifyListeners());
     final userList = await _userRepository.queryListItems();
     _userItems = userList.map((e) => e as User).toList();
+    _userItems.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
     userLoading = false;
     Future.microtask(() => notifyListeners());
   }

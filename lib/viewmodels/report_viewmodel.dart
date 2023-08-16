@@ -20,6 +20,7 @@ class ReportViewModel extends ChangeNotifier {
     Future.microtask(() => notifyListeners());
     final reportList = await _reportRepository.queryListItems();
     _reportItems = reportList.map((e) => e as Report).toList();
+    _reportItems.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
     reportLoading = false;
     Future.microtask(() => notifyListeners());
   }

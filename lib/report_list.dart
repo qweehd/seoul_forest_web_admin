@@ -34,7 +34,6 @@ class _ReportListState extends State<ReportList> {
         return const Center(child: CircularProgressIndicator());
       }
       reportList = viewModel.reportItems;
-      reportList.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
       return SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

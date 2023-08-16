@@ -19,6 +19,7 @@ class PostViewModel extends ChangeNotifier {
     Future.microtask(() => notifyListeners());
     final postList = await _postRepository.queryListItems();
     _postItems = postList.map((e) => e as Post).toList();
+    _postItems.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
     postLoading = false;
     Future.microtask(() => notifyListeners());
   }

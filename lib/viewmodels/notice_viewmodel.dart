@@ -20,6 +20,7 @@ class NoticeViewModel extends ChangeNotifier {
     Future.microtask(() => notifyListeners());
     final noticeList = await _noticeRepository.queryListItems();
     _noticeItems = noticeList.map((e) => e as PublicNotice).toList();
+    _noticeItems.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
     noticeLoading = false;
     Future.microtask(() => notifyListeners());
   }
