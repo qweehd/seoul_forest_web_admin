@@ -172,6 +172,10 @@ class _PostListState extends State<PostList> {
   void deleteSelected() {
     setState(() {
       postList.removeWhere((postitem) => checkedMap[postitem.id] == true);
+      Provider.of<PostViewModel>(
+          context,
+          listen: false)
+          .deletePostByID(checkedMap);
     });
   }
 

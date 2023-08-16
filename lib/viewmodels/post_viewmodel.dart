@@ -23,4 +23,22 @@ class PostViewModel extends ChangeNotifier {
     postLoading = false;
     Future.microtask(() => notifyListeners());
   }
+
+  Future<void> deletePost(String postID) async {
+    if (await _postRepository.deletePost(postID)) {
+      postItems.removeWhere((post) => post.id == postID);
+      notifyListeners();
+    } else {
+      safePrint('Error deleting Post');
+      notifyListeners();
+    }
+  }
+
+  void deletePostByID(Map<String, bool> checkedMap) {
+checkedMap.forEach((key, value) async {
+      if (value) {
+        await deletePost(key);
+      }
+    });
+  }
 }

@@ -2,8 +2,11 @@ import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 
 import '../models/ModelProvider.dart';
+import 'graphQL_helper/graphQL_helper.dart';
 
 class NoticeRepository {
+  final GraphQLHelper _graphQLHelper = GraphQLHelper();
+
   Future<List<PublicNotice?>> queryListItems() async {
     try {
       final request = ModelQueries.list(PublicNotice.classType);
@@ -22,6 +25,5 @@ class NoticeRepository {
       return [];
     }
   }
-
 
 }
