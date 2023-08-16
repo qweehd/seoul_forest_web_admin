@@ -120,6 +120,10 @@ class _PublicNoticeListState extends State<PublicNoticeList> {
   void deleteSelected() {
     setState(() {
       noticeList.removeWhere((notice) => checkedMap[notice.id] == true);
+      Provider.of<PublicNoticeViewModel>(
+          context,
+          listen: false)
+          .deletePublicNoticeByID(checkedMap);
     });
   }
 

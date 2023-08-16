@@ -25,6 +25,22 @@ class PublicNoticeViewModel extends ChangeNotifier {
     Future.microtask(() => notifyListeners());
   }
 
+  Future<void> deletePublicNotice(String publicNoticeID) async {
+    if (await _publicNoticeRepository.deletePublicNotice(publicNoticeID)) {
+      publicNoticeItems.removeWhere((publicNotice) => publicNotice.id == publicNoticeID);
+      notifyListeners();
+    } else {
+      safePrint('Error deleting PublicNotice');
+      notifyListeners();
+    }
+  }
 
+  void deletePublicNoticeByID(Map<String, bool> checkedMap) {
+    checkedMap.forEach((key, value) async {
+      if (value) {
+        await deletePublicNotice(key);
+      }
+    });
+  }
 }
 
