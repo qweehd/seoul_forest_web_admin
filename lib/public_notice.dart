@@ -31,7 +31,7 @@ class _PublicNoticeListState extends State<PublicNoticeList> {
         return const Center(child: CircularProgressIndicator());
       }
       noticeList = viewModel.noticeItems;
-      noticeList.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      noticeList.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
       return SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

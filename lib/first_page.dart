@@ -49,7 +49,7 @@ class _FirstPageState extends State<FirstPage> {
             return const Center(child: CircularProgressIndicator());
           }
           noticeList = viewModel.noticeItems;
-          noticeList.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+          noticeList.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
           List<PublicNotice> recentNoticeList = noticeList.take(5).toList();
           return SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -187,7 +187,7 @@ class _FirstPageState extends State<FirstPage> {
               return const Center(child: CircularProgressIndicator());
             }
             userList = viewModel.userItems;
-            userList.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+            userList.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
             List<User> recentUserList = userList.take(5).toList();
             return SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
@@ -263,7 +263,7 @@ class _FirstPageState extends State<FirstPage> {
               return const Center(child: CircularProgressIndicator());
             }
             reportList = viewModel.reportItems;
-            reportList.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+            reportList.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
             List<Report> recentReportList = reportList.take(5).toList();
             return SingleChildScrollView(
                     scrollDirection: Axis.horizontal,

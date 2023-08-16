@@ -46,8 +46,6 @@ class _PublicNoticeWritePageState extends State<PublicNoticeWritePage> {
                     title: _titleController.text,
                     content: _contentController.text,
                     sortNum: int.parse(_sortNumController.text),
-                    createdAt: TemporalDateTime.now(),
-                    updatedAt: TemporalDateTime.now(),
                   );
                   Navigator.pop(context, noticeItem);
                 }

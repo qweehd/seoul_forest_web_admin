@@ -23,4 +23,7 @@ class NoticeViewModel extends ChangeNotifier {
     noticeLoading = false;
     Future.microtask(() => notifyListeners());
   }
+
+
 }
+

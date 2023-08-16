@@ -7,7 +7,9 @@ class NoticeRepository {
   Future<List<PublicNotice?>> queryListItems() async {
     try {
       final request = ModelQueries.list(PublicNotice.classType);
-      final response = await Amplify.API.query(request: request).response;
+      final response = await Amplify.API
+          .query(request: request)
+          .response;
 
       final noticeList = response.data?.items;
       if (noticeList == null) {
@@ -20,4 +22,6 @@ class NoticeRepository {
       return [];
     }
   }
+
+
 }
