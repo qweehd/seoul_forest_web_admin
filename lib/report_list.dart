@@ -131,6 +131,10 @@ class _ReportListState extends State<ReportList> {
   void deleteSelected() {
     setState(() {
       reportList.removeWhere((reportitem) => checkedMap[reportitem.id] == true);
+      Provider.of<ReportViewModel>(
+          context,
+          listen: false)
+          .deleteReportByID(checkedMap);
     });
   }
 

@@ -24,4 +24,22 @@ class ReportViewModel extends ChangeNotifier {
     reportLoading = false;
     Future.microtask(() => notifyListeners());
   }
+
+  Future<void> deleteReport(String reportID) async {
+    if (await _reportRepository.deleteReport(reportID)) {
+      reportItems.removeWhere((report) => report.id == reportID);
+      notifyListeners();
+    } else {
+      safePrint('Error deleting Post');
+      notifyListeners();
+    }
+  }
+
+  void deleteReportByID(Map<String, bool> checkedMap) {
+    checkedMap.forEach((key, value) async {
+      if (value) {
+        await deleteReport(key);
+      }
+    });
+  }
 }
