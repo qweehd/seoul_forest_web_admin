@@ -24,4 +24,22 @@ class UserViewModel extends ChangeNotifier {
     userLoading = false;
     Future.microtask(() => notifyListeners());
   }
+
+  Future<void> deleteUser(String userID) async {
+    if (await _userRepository.deleteUser(userID)) {
+      userItems.removeWhere((user) => user.id == userID);
+      notifyListeners();
+    } else {
+      safePrint('Error deleting User');
+      notifyListeners();
+    }
+  }
+
+  void deleteUserByID(Map<String, bool> checkedMap) {
+    checkedMap.forEach((key, value) async {
+      if (value) {
+        await deleteUser(key);
+      }
+    });
+  }
 }

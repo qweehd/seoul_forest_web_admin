@@ -142,6 +142,10 @@ class _UserListState extends State<UserList> {
   void deleteSelected() {
     setState(() {
       userList.removeWhere((useritem) => checkedMap[useritem.id] == true);
+      Provider.of<UserViewModel>(
+          context,
+          listen: false)
+          .deleteUserByID(checkedMap);
     });
   }
 
