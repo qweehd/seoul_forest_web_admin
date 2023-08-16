@@ -30,7 +30,7 @@ class ReportViewModel extends ChangeNotifier {
       reportItems.removeWhere((report) => report.id == reportID);
       notifyListeners();
     } else {
-      safePrint('Error deleting Post');
+      safePrint('Error deleting Report');
       notifyListeners();
     }
   }

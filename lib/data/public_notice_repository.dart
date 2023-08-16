@@ -34,7 +34,7 @@ class PublicNoticeRepository {
         'id': publicNoticeID,
       },
       decodePath: 'deletePublicNotice',
-      modelType: Post.classType,
+      modelType: PublicNotice.classType,
     );
     var response = await _graphQLHelper.processRequest(
         request, GraphQLHelperRequestType.mutation);

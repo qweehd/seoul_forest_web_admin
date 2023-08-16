@@ -31,7 +31,7 @@ class ReportRepository {
         'id': reportID,
       },
       decodePath: 'deleteReport',
-      modelType: Post.classType,
+      modelType: Report.classType,
     );
     var response = await _graphQLHelper.processRequest(
         request, GraphQLHelperRequestType.mutation);
