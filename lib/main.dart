@@ -8,12 +8,12 @@ import 'package:seoul_forest_web_admin/post_list.dart';
 import 'package:seoul_forest_web_admin/public_notice.dart';
 import 'package:seoul_forest_web_admin/report_list.dart';
 import 'package:seoul_forest_web_admin/user_list.dart';
-import 'package:seoul_forest_web_admin/viewmodels/notice_viewmodel.dart';
+import 'package:seoul_forest_web_admin/viewmodels/public_notice_viewmodel.dart';
 import 'package:seoul_forest_web_admin/viewmodels/post_viewmodel.dart';
 import 'package:seoul_forest_web_admin/viewmodels/report_viewmodel.dart';
 import 'package:seoul_forest_web_admin/viewmodels/user_viewmodel.dart';
 import 'amplifyconfiguration.dart';
-import 'data/notice_repository.dart';
+import 'data/public_notice_repository.dart';
 import 'data/report_repository.dart';
 import 'data/user_repository.dart';
 import 'models/ModelProvider.dart';
@@ -27,7 +27,7 @@ void main() async {
           create: (context) => PostViewModel(postRepository: PostRepository())),
       ChangeNotifierProvider(
           create: (context) =>
-              NoticeViewModel(noticeRepository: NoticeRepository())),
+              PublicNoticeViewModel(publicNoticeRepository: PublicNoticeRepository())),
       ChangeNotifierProvider(
           create: (context) => UserViewModel(userRepository: UserRepository())),
       ChangeNotifierProvider(
@@ -86,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     Provider.of<PostViewModel>(context, listen: false).queryPostItems();
-    Provider.of<NoticeViewModel>(context, listen: false).queryNoticeItems();
+    Provider.of<PublicNoticeViewModel>(context, listen: false).queryNoticeItems();
     Provider.of<UserViewModel>(context, listen: false).queryUserItems();
     Provider.of<ReportViewModel>(context, listen: false).queryReportItems();
   }

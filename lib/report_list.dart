@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:seoul_forest_web_admin/viewmodels/report_viewmodel.dart';
 import 'models/Report.dart';
-import 'viewmodels/notice_viewmodel.dart';
+import 'viewmodels/public_notice_viewmodel.dart';
 
 class ReportList extends StatefulWidget {
   const ReportList({

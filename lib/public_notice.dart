@@ -3,7 +3,7 @@ import 'package:seoul_forest_web_admin/models/ModelProvider.dart';
 import 'package:seoul_forest_web_admin/public_notice_edit.dart';
 import 'package:seoul_forest_web_admin/public_notice_write.dart';
 import 'package:provider/provider.dart';
-import 'viewmodels/notice_viewmodel.dart';
+import 'viewmodels/public_notice_viewmodel.dart';
 
 class PublicNoticeList extends StatefulWidget {
   const PublicNoticeList({
@@ -26,11 +26,11 @@ class _PublicNoticeListState extends State<PublicNoticeList> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<NoticeViewModel>(builder: (context, viewModel, child) {
-      if (viewModel.noticeLoading) {
+    return Consumer<PublicNoticeViewModel>(builder: (context, viewModel, child) {
+      if (viewModel.publicNoticeLoading) {
         return const Center(child: CircularProgressIndicator());
       }
-      noticeList = viewModel.noticeItems;
+      noticeList = viewModel.publicNoticeItems;
       return SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

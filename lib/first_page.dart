@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:seoul_forest_web_admin/viewmodels/notice_viewmodel.dart';
+import 'package:seoul_forest_web_admin/viewmodels/public_notice_viewmodel.dart';
 import 'package:seoul_forest_web_admin/viewmodels/report_viewmodel.dart';
 import 'package:seoul_forest_web_admin/viewmodels/user_viewmodel.dart';
 import 'models/ModelProvider.dart';
@@ -44,11 +44,11 @@ class _FirstPageState extends State<FirstPage> {
             padding: EdgeInsets.only(left: 10), // Add left padding
             child: Text('공지사항', style: TextStyle(fontSize: 20)),
           ),
-          Consumer<NoticeViewModel>(builder: (context, viewModel, child) {
-          if (viewModel.noticeLoading) {
+          Consumer<PublicNoticeViewModel>(builder: (context, viewModel, child) {
+          if (viewModel.publicNoticeLoading) {
             return const Center(child: CircularProgressIndicator());
           }
-          noticeList = viewModel.noticeItems;
+          noticeList = viewModel.publicNoticeItems;
           List<PublicNotice> recentNoticeList = noticeList.take(5).toList();
           return SingleChildScrollView(
             scrollDirection: Axis.horizontal,
