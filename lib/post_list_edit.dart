@@ -1,3 +1,4 @@
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:seoul_forest_web_admin/post_list.dart';
 
@@ -13,62 +14,89 @@ class PostListEditPage extends StatefulWidget {
 }
 
 class _PostListEditPageState extends State<PostListEditPage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late TextEditingController _idController;
-  late TextEditingController _contentController;
-  late TextEditingController _createdAtController;
-  late TextEditingController _currencyController;
-
-  // You need to handle List<String> for imageKeys
-  late TextEditingController _isNegotiableController;
-  late TextEditingController _mainCategoryIDController;
-  late TextEditingController _mainCategoryTypeController;
-  late TextEditingController _priceController;
-  late TextEditingController _statusController;
-  late TextEditingController _subCategoryIDController;
   late TextEditingController _titleController;
+  late TextEditingController _contentController;
+
+  late TextEditingController _priceController;
+  late TextEditingController _isNegotiableController;
+  late TextEditingController _nationalScopeController;
+  late TextEditingController _nationalCurrencyController;
+
+  late TextEditingController _createdAtController;
+  late TextEditingController _imageKeysController;
+
+
+  late TextEditingController _mainCategoryTypeController;
+  late TextEditingController _subCategoryIDController;
+  late TextEditingController _cityIDController;
+
+  late TextEditingController _countryIDController;
   late TextEditingController _updatedAtController;
-  late TextEditingController _userIDController;
-  late TextEditingController _typenameController;
+  late TextEditingController _authorUserIDController;
+
+  bool? _isNegotiable; // Radio 위젯의 선택값을 저장
+  bool? _nationalScope; // Radio 위젯의 선택값을 저장
+  bool? _nationalCurrency; // Radio 위젯의 선택값을 저장
 
   @override
   void initState() {
     super.initState();
     _idController = TextEditingController(text: '${widget.postitem.id}');
+    _titleController = TextEditingController(text: widget.postitem.title);
     _contentController = TextEditingController(text: widget.postitem.content);
+
+    _priceController = TextEditingController(text: '${widget.postitem.price}');
+    _isNegotiableController = TextEditingController(
+        text: widget.postitem.isNegotiable.toString());
+    _nationalScopeController = TextEditingController(
+        text: widget.postitem.nationalScope.toString());
+    _nationalCurrencyController = TextEditingController(
+        text: widget.postitem.nationalCurrency.toString());
+
     _createdAtController =
         TextEditingController(text: '${widget.postitem.createdAt}');
-    _currencyController = TextEditingController(text: widget.postitem.currency);
-    _isNegotiableController =
-        TextEditingController(text: '${widget.postitem.isNegotiable}');
+    _imageKeysController =
+        TextEditingController(text: '${widget.postitem.imageKeys}');
     _mainCategoryTypeController = TextEditingController(
         text: widget.postitem.mainCategoryType.toString());
-    _priceController = TextEditingController(text: '${widget.postitem.price}');
-    _statusController = TextEditingController(text: widget.postitem.status);
     _subCategoryIDController =
         TextEditingController(text: '${widget.postitem.subCategory?.id}');
-    _titleController = TextEditingController(text: widget.postitem.title);
+    _cityIDController =
+        TextEditingController(text: '${widget.postitem.city?.id}');
+
+    _countryIDController =
+        TextEditingController(text: '${widget.postitem.country?.id}');
+
     _updatedAtController =
         TextEditingController(text: '${widget.postitem.updatedAt}');
-    _userIDController =
+    _authorUserIDController =
         TextEditingController(text: widget.postitem.authorUser?.id);
+
   }
 
   @override
   void dispose() {
     _idController.dispose();
-    _contentController.dispose();
-    _createdAtController.dispose();
-    _currencyController.dispose();
-    _isNegotiableController.dispose();
-    _mainCategoryIDController.dispose();
-    _mainCategoryTypeController.dispose();
-    _priceController.dispose();
-    _statusController.dispose();
-    _subCategoryIDController.dispose();
     _titleController.dispose();
+    _contentController.dispose();
+
+    _priceController.dispose();
+    _isNegotiableController.dispose();
+    _nationalScopeController.dispose();
+    _nationalCurrencyController.dispose();
+    _createdAtController.dispose();
+    _imageKeysController.dispose();
+    _mainCategoryTypeController.dispose();
+    _subCategoryIDController.dispose();
+    _cityIDController.dispose();
+
+    _countryIDController.dispose();
     _updatedAtController.dispose();
-    _userIDController.dispose();
-    _typenameController.dispose();
+    _authorUserIDController.dispose();
+
+
     super.dispose();
   }
 
@@ -83,23 +111,73 @@ class _PostListEditPageState extends State<PostListEditPage> {
         child: ListView(
           children: <Widget>[
             buildTextField(_idController, 'ID'),
-            buildTextField(_contentController, 'Content'),
-            buildTextField(_createdAtController, 'Created At'),
-            buildTextField(_currencyController, 'Currency'),
-            // Handle imageKeys properly here
-            buildTextField(_isNegotiableController, 'Is Negotiable'),
-            buildTextField(_mainCategoryIDController, 'Main Category ID'),
-            buildTextField(_mainCategoryTypeController, 'Main Category Type'),
-            buildTextField(_priceController, 'Price'),
-            buildTextField(_statusController, 'Status'),
-            buildTextField(_subCategoryIDController, 'Sub Category ID'),
             buildTextField(_titleController, 'Title'),
+            buildTextField(_contentController, 'Content'),
+
+            buildTextField(_priceController, 'Price'),
+            buildTextField(_isNegotiableController, 'Is Negotiable'),
+            buildTextField(_nationalScopeController, 'National Scope'),
+            buildTextField(_nationalCurrencyController, 'National Currency'),
+
+            buildTextField(_createdAtController, 'Created At'),
+            buildTextField(_imageKeysController, 'Image Keys'),
+
+            buildTextField(_mainCategoryTypeController, 'Main Category Type'),
+
+            buildTextField(_subCategoryIDController, 'Sub Category ID'),
+            buildTextField(_cityIDController, 'City ID'),
+            buildTextField(_countryIDController, 'Country ID'),
+
             buildTextField(_updatedAtController, 'Updated At'),
-            buildTextField(_userIDController, 'User ID'),
-            buildTextField(_typenameController, '__typename'),
             ElevatedButton(
               onPressed: () {
-                // Implement the update logic here
+                if (_formKey.currentState!.validate() &&
+                    _isNegotiable != null) {
+                  var postItem = Post(
+                    id: _idController.text,
+                    title: _titleController.text,
+                    content: _contentController.text,
+
+                    price: int.parse(_priceController.text),
+                    isNegotiable: _isNegotiable!,
+                    nationalCurrency: _nationalCurrency!,
+                    nationalScope: _nationalScope!,
+
+                    createdAt: TemporalDateTime.now(),
+                    imageKeys: _imageKeysController.text.split(','),
+
+                    mainCategoryType: MainCategoryType.MARKETPLACE,
+                    subCategory: SubCategory(
+                      id: _subCategoryIDController.text,
+                      name: '',
+                      title: '',
+                      mainCategoryType: MainCategoryType.COMMUNITY,
+                      sortNum: 0,
+                    ),
+                    city: City(
+                      id: _cityIDController.text,
+                      name: '',
+                      country: Country(
+                        id: _countryIDController.text,
+                        name: '', code: '', flagEmoji: '', currency: '', currencyCode: '', dialCode: '',
+                      ),
+                      state: '', latitude: 0, longitude
+                        : 0, imageKey: '', hasMainCategories: [],
+                    ),
+                    country: Country(
+                      id: _countryIDController.text,
+                      name: '', code: '', flagEmoji: '', currency: '', currencyCode: '', dialCode: '',
+                    ),
+                    authorUser: User(
+                        userName: '',
+                        phone: '',
+                        devicePlatform: DevicePlatform.ANDROID,
+                        deviceToken: '',
+                        isCompletelyRegistered: true),
+
+                  );
+                  Navigator.pop(context, postItem);
+                }
               },
               child: Text('Update'),
             ),

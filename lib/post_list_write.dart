@@ -12,22 +12,29 @@ class PostListWritePage extends StatefulWidget {
 
 class _PostListWritePageState extends State<PostListWritePage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  final TextEditingController _idController = TextEditingController();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
-  final TextEditingController _currencyController = TextEditingController();
-  final TextEditingController _mainCategoryIDController =
-      TextEditingController();
-  final TextEditingController _mainCategoryTypeController =
-      TextEditingController();
+
   final TextEditingController _priceController = TextEditingController();
-  final TextEditingController _statusController = TextEditingController();
-  final TextEditingController _subCategoryIDController =
-      TextEditingController();
-  final TextEditingController _userIDController = TextEditingController();
-  final TextEditingController _typenameController = TextEditingController();
+
+  final TextEditingController _createdAtController = TextEditingController();
   final TextEditingController _imageKeysController = TextEditingController();
 
+  final TextEditingController _mainCategoryTypeController =
+  TextEditingController();
+  final TextEditingController _subCategoryIDController =
+  TextEditingController();
+  final TextEditingController _cityIDController = TextEditingController();
+
+  final TextEditingController _countryIDController = TextEditingController();
+  final TextEditingController _updatedAtController = TextEditingController();
+  final TextEditingController _authorUserIDController = TextEditingController();
+
   bool? _isNegotiable; // Radio 위젯의 선택값을 저장
+  bool? _nationalScope; // Radio 위젯의 선택값을 저장
+  bool? _nationalCurrency; // Radio 위젯의 선택값을 저장
 
   @override
   Widget build(BuildContext context) {
@@ -40,19 +47,11 @@ class _PostListWritePageState extends State<PostListWritePage> {
         child: ListView(
           padding: EdgeInsets.all(16.0),
           children: <Widget>[
+            buildTextFormField(_idController, 'ID'),
             buildTextFormField(_titleController, 'Title'),
             buildTextFormField(_contentController, 'Content'),
-            buildTextFormField(_currencyController, 'Currency'),
-            buildTextFormField(_mainCategoryIDController, 'Main Category ID'),
-            buildTextFormField(
-                _mainCategoryTypeController, 'Main Category Type'),
+
             buildTextFormField(_priceController, 'Price'),
-            buildTextFormField(_statusController, 'Status'),
-            buildTextFormField(_subCategoryIDController, 'Sub Category ID'),
-            buildTextFormField(_userIDController, 'User ID'),
-            buildTextFormField(_typenameController, '__typename'),
-            buildTextFormField(
-                _imageKeysController, 'Image Keys (comma-separated)'),
             SizedBox(height: 20),
             Text('Is Negotiable:'),
             Row(
@@ -87,17 +86,104 @@ class _PostListWritePageState extends State<PostListWritePage> {
                 ),
               ],
             ),
+            SizedBox(height: 20),
+            Text('National Currency:'),
+            Row(
+              children: [
+                Expanded(
+                  child: ListTile(
+                    title: Text('True'),
+                    leading: Radio<bool>(
+                      value: true,
+                      groupValue: _nationalCurrency,
+                      onChanged: (value) {
+                        setState(() {
+                          _nationalCurrency = value;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: ListTile(
+                    title: Text('False'),
+                    leading: Radio<bool>(
+                      value: false,
+                      groupValue: _nationalCurrency,
+                      onChanged: (value) {
+                        setState(() {
+                          _nationalCurrency = value;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Text('National Currency:'),
+            Row(
+              children: [
+                Expanded(
+                  child: ListTile(
+                    title: Text('True'),
+                    leading: Radio<bool>(
+                      value: true,
+                      groupValue: _nationalScope,
+                      onChanged: (value) {
+                        setState(() {
+                          _nationalScope = value;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: ListTile(
+                    title: Text('False'),
+                    leading: Radio<bool>(
+                      value: false,
+                      groupValue: _nationalScope,
+                      onChanged: (value) {
+                        setState(() {
+                          _nationalScope = value;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            buildTextFormField(_createdAtController, 'Created At'),
+            buildTextFormField(_imageKeysController, 'Image Keys'),
+
+            buildTextFormField(
+                _mainCategoryTypeController, 'Main Category Type'),
+            buildTextFormField(_subCategoryIDController, 'Sub Category ID'),
+            buildTextFormField(_cityIDController, 'City ID'),
+
+            buildTextFormField(_countryIDController, 'Country ID'),
+            buildTextFormField(_updatedAtController, 'Update At'),
+            buildTextFormField(_authorUserIDController, 'Author User ID'),
+
             ElevatedButton(
               onPressed: () {
                 if (_formKey.currentState!.validate() &&
                     _isNegotiable != null) {
                   var postItem = Post(
+                    id: _idController.text,
                     title: _titleController.text,
                     content: _contentController.text,
-                    currency: _currencyController.text,
-                    mainCategoryType: MainCategoryType.MARKETPLACE,
+
                     price: int.parse(_priceController.text),
-                    status: _statusController.text,
+                    isNegotiable: _isNegotiable!,
+                    nationalCurrency: _nationalCurrency!,
+                    nationalScope: _nationalScope!,
+
+                    createdAt: TemporalDateTime.now(),
+                    imageKeys: _imageKeysController.text.split(','),
+
+                    mainCategoryType: MainCategoryType.MARKETPLACE,
                     subCategory: SubCategory(
                       id: _subCategoryIDController.text,
                       name: '',
@@ -105,15 +191,27 @@ class _PostListWritePageState extends State<PostListWritePage> {
                       mainCategoryType: MainCategoryType.COMMUNITY,
                       sortNum: 0,
                     ),
+                    city: City(
+                      id: _cityIDController.text,
+                      name: '',
+                      country: Country(
+                        id: _countryIDController.text,
+                        name: '', code: '', flagEmoji: '', currency: '', currencyCode: '', dialCode: '',
+                      ),
+                      state: '', latitude: 0, longitude
+                          : 0, imageKey: '', hasMainCategories: [],
+                    ),
+                    country: Country(
+                      id: _countryIDController.text,
+                      name: '', code: '', flagEmoji: '', currency: '', currencyCode: '', dialCode: '',
+                    ),
                     authorUser: User(
                         userName: '',
                         phone: '',
                         devicePlatform: DevicePlatform.ANDROID,
                         deviceToken: '',
                         isCompletelyRegistered: true),
-                    imageKeys: _imageKeysController.text.split(','),
-                    isNegotiable: _isNegotiable!,
-                    createdAt: TemporalDateTime.now(),
+
                   );
                   Navigator.pop(context, postItem);
                 }

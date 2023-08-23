@@ -75,10 +75,11 @@ class _PostListState extends State<PostList> {
                   // 유지됨 (기능에 따라 필요할 수 있음)
                   DataColumn(label: Text('ID')),
                   DataColumn(label: Text('Title')),
-
                   DataColumn(label: Text('Content')),
+
                   DataColumn(label: Text('Price')),
-                  DataColumn(label: Text('Currency')),
+                  DataColumn(label: Text('NationalCurrency')),
+                  DataColumn(label: Text('NationalScope')),
 
                   DataColumn(label: Text('Created At')),
                   DataColumn(label: Text('Is Negotiable')),
@@ -106,28 +107,18 @@ class _PostListState extends State<PostList> {
                         },
                       )),
 
-                      /* ID Field*/
                       DataCell(buildDataCell(context, post.id, post)),
-
-                      /* Title Field*/
                       DataCell(buildDataCell(context, post.title, post)),
-                      /* Content Field*/
                       DataCell(buildDataCell(context, post.content, post)),
 
-                      /* Price Field*/
                       DataCell(buildDataCell(context, '${post.price}', post)),
+                      DataCell(buildDataCell(context, '${post.nationalCurrency}', post)),
+                      DataCell(buildDataCell(context, '${post.nationalScope}', post)),
 
-                      /* Currency Field*/
-                      DataCell(buildDataCell(context, post.currency!, post)),
-
-                      /* Created At Field*/
                       DataCell(buildDataCell(
                           context, post.createdAt.toString(), post)),
-                      /* Is Negotiable Field*/
                       DataCell(
                           buildDataCell(context, '${post.isNegotiable}', post)),
-
-                      /* ImageKeys Field*/
                       DataCell(buildDataCell(
                           context,
                           post.imageKeys != null && post.imageKeys!.isNotEmpty
@@ -135,27 +126,16 @@ class _PostListState extends State<PostList> {
                               : "",
                           post)),
 
-                      /* MainCategoryType Field*/
-
                       DataCell(buildDataCell(
                           context, post.mainCategoryType.toString(), post)),
-
-                      /* SubCategoryID Field*/
-
                       DataCell(buildDataCell(
                           context, '${post.subCategory?.id}', post)),
-
-                      /* CityID Field*/
                       DataCell(buildDataCell(context, post.city!.id, post)),
 
-                      /* CountryID Field*/
                       DataCell(buildDataCell(context, post.country!.id, post)),
-
-                      /* UpdatedAt Field*/
                       DataCell(
                           buildDataCell(context, '${post.updatedAt}', post)),
 
-                      /* AuthorUserID Field*/
                       DataCell(buildDataCell(
                           context, post.authorUser?.id ?? "", post)),
                     ],

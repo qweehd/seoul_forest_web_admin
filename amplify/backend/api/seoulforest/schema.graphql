@@ -98,10 +98,12 @@ type SubCategory @model @auth(rules: [{allow: public}]) {
     posts: [Post] @hasMany(indexName: "bySubCategory", fields: ["id"])
 }
 
-type Post @model @auth(rules: [{allow: public}]) {
+type Post @model @searchable @auth(rules: [{allow: public}]) {
     id: ID!
     title: String!
     content: String!
+    nationalScope: Boolean
+    nationalCurrency: Boolean
     price: Int
     currency: String
     status: String @index(name: "byCreatedAt", sortKeyFields: ["createdAt"])
@@ -118,12 +120,13 @@ type Post @model @auth(rules: [{allow: public}]) {
     reads: [PostRead] @hasMany(indexName: "byPost", fields: ["id"])
     reportsReceived: [Report] @hasMany(indexName: "byReportedPost", fields: ["id"])
 
-    cityID: ID! @index(name: "byCity")
+    cityID: ID! @index(name: "byCity", sortKeyFields: ["createdAt"])
     city: City @belongsTo(fields: ["cityID"])
 
     countryID: ID! @index(name: "byCountry")
     country: Country @belongsTo(fields: ["countryID"])
 }
+
 
 
 type User @model @searchable @auth(rules: [{allow: public}]) {
@@ -151,6 +154,8 @@ type User @model @searchable @auth(rules: [{allow: public}]) {
     reportsSent: [Report] @hasMany(indexName: "byReporter", fields: ["id"])
     cityID: ID! @index(name: "byCity")
     city: City @belongsTo(fields: ["cityID"])
+    countryID: ID! @index(name: "byCountry")
+    country: Country @belongsTo(fields: ["countryID"])
 }
 
 enum DevicePlatform {
@@ -188,7 +193,14 @@ type PublicNotice @model @auth(rules: [{allow: public}]) {
     title: String!
     content: String!
     sortNum: Int!
+    nationalScope: Boolean
+    createdAt: AWSDateTime!
+    cityID: ID! @index(name: "byCity", sortKeyFields: ["sortNum"])
+    countryID: ID! @index(name: "byCountry", sortKeyFields: ["sortNum"])
+    city: City @belongsTo(fields: ["cityID"])
+    country: Country @belongsTo(fields: ["countryID"])
 }
+
 
 type RealEstatePost @model @auth(rules: [{allow: public}]) {
     id: ID!
@@ -316,7 +328,7 @@ enum ShopCategory {
     OTHER
 }
 
-type Shop @model @auth(rules: [{allow: public}]) {
+type Shop @model @searchable @auth(rules: [{allow: public}]) {
     id: ID!
     name: String!
     imageKeys: [String]!
@@ -349,6 +361,8 @@ type Country @model @auth(rules: [{allow: public}]) {
     continent: Continent @belongsTo(fields: ["continentID"])
     cities: [City] @hasMany(indexName: "byCountry", fields: ["id"])
     posts: [Post] @hasMany(indexName: "byCountry", fields: ["id"])
+    publicNotices: [PublicNotice] @hasMany(indexName: "byCountry", fields: ["id"])
+    users: [User] @hasMany(indexName: "byCountry", fields: ["id"])
 }
 
 type City @model @auth(rules: [{allow: public}]) {
@@ -357,6 +371,7 @@ type City @model @auth(rules: [{allow: public}]) {
     state: String!
     latitude: Float!
     longitude: Float!
+    zoomLevel: Float
     serviceOpeningDate: AWSDateTime
     imageKey: String!
     hasMainCategories: [MainCategoryType]!
@@ -368,6 +383,7 @@ type City @model @auth(rules: [{allow: public}]) {
     realEstatePosts: [RealEstatePost] @hasMany(indexName: "byCity", fields: ["id"])
     shops: [Shop] @hasMany(indexName: "byCity", fields: ["id"])
     users: [User] @hasMany(indexName: "byCity", fields: ["id"])
+    publicNotices: [PublicNotice] @hasMany(indexName: "byCity", fields: ["id"])
 }
 
 type Zone @model @auth(rules: [{allow: public}]) {

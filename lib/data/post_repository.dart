@@ -38,4 +38,47 @@ class PostRepository {
         request, GraphQLHelperRequestType.mutation);
     return response.data != null;
   }
+
+  Future<bool> updatePost(
+      String postID,
+      String? title,
+      String? cityID,
+      String? content,
+      String? countryID,
+      String? createdAt,
+      bool? nationalCurrency,
+      bool? nationalScope,
+      String? status,
+      String? updatedAt,
+      String? mainCategoryType,
+      String? userID,
+      int? price,
+      bool? isNegotiable,
+      String? subCategoryID) async {
+    var request = await _graphQLHelper.buildRequest(
+      document: PostMutations.updatePost,
+      variables: {
+        'id': postID,
+        'title': title,
+        'content': content,
+        'price': price,
+        'isNegotiable': isNegotiable,
+        'subCategoryID': subCategoryID,
+        'status': status,
+        'userID': userID,
+        'cityID': cityID,
+        'mainCategoryType': mainCategoryType,
+        'countryID': countryID,
+        'createdAt': createdAt,
+        'updatedAt': updatedAt,
+        'nationalCurrency': nationalCurrency,
+        'nationalScope': nationalScope,
+      },
+      decodePath: 'updatePost',
+      modelType: Post.classType,
+    );
+    var response = await _graphQLHelper.processRequest(
+        request, GraphQLHelperRequestType.mutation);
+    return response.data != null;
+  }
 }
