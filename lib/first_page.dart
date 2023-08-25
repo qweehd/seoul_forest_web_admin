@@ -59,7 +59,60 @@ class _DashBoardState extends State<DashBoard> {
         Container(
           color: Colors.blue[100],
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              MaterialButton(
+                minWidth: 200,
+                color: Colors.blue,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15)),
+                padding: const EdgeInsets.all(40),
+                onPressed: () {
+                  // showCreatePublicNoticeModal();
+                  context.go('/public_notice/create');
+                },
+                child: const Column(
+                  children: [
+                    Icon(
+                      Icons.public_rounded,
+                      size: 50,
+                      color: Colors.white,
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      '국가 추가',
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 20),
+              MaterialButton(
+                minWidth: 200,
+                color: Colors.blue,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15)),
+                padding: const EdgeInsets.all(40),
+                onPressed: () {
+                  // showCreatePublicNoticeModal();
+                  context.go('/public_notice/create');
+                },
+                child: const Column(
+                  children: [
+                    Icon(
+                      Icons.domain,
+                      size: 50,
+                      color: Colors.white,
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      '도시 추가',
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 20),
               MaterialButton(
                 minWidth: 200,
                 color: Colors.blue,
@@ -102,7 +155,7 @@ class _DashBoardState extends State<DashBoard> {
                     ),
                     SizedBox(height: 10),
                     Text(
-                      '게시글 작성',
+                      '게시물 작성',
                       style: TextStyle(color: Colors.white, fontSize: 20),
                     ),
                   ],
@@ -214,8 +267,7 @@ class _DashBoardState extends State<DashBoard> {
                         return DataRow(
                           cells: <DataCell>[
                             /* Title Field*/
-                            DataCell(
-                                buildDataCell(context, post.title, post)),
+                            DataCell(buildDataCell(context, post.title, post)),
                             /* Content Field*/
                             DataCell(
                                 buildDataCell(context, post.content, post)),
@@ -309,8 +361,8 @@ class _DashBoardState extends State<DashBoard> {
                               constraints: BoxConstraints(
                                 maxWidth: 120, // 최대 너비를 100픽셀로 제한
                               ),
-                              child: buildUserDataCell(
-                                  context, user.phone, user),
+                              child:
+                                  buildUserDataCell(context, user.phone, user),
                             ),
                           ),
                           DataCell(
@@ -378,8 +430,8 @@ class _DashBoardState extends State<DashBoard> {
                                 constraints: BoxConstraints(
                                   maxWidth: 150, // 최대 너비를 100픽셀로 제한
                                 ),
-                                child: buildReportDataCell(context,
-                                    reportitem.type.name, reportitem),
+                                child: buildReportDataCell(
+                                    context, reportitem.type.name, reportitem),
                               ),
                             ),
                             DataCell(
