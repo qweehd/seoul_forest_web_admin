@@ -51,13 +51,14 @@ class _DashBoardState extends State<DashBoard> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(height: 20),
-          Row(
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const SizedBox(height: 20),
+        Container(
+          color: Colors.blue[100],
+          child: Row(
             children: [
               MaterialButton(
                 minWidth: 200,
@@ -110,205 +111,47 @@ class _DashBoardState extends State<DashBoard> {
               SizedBox(width: 20),
             ],
           ),
-          const SizedBox(height: 20),
-          const Padding(
-            padding: EdgeInsets.only(left: 10), // Add left padding
-            child: Text('공지사항', style: TextStyle(fontSize: 20)),
-          ),
-          Consumer<PublicNoticeViewModel>(builder: (context, viewModel, child) {
-            if (viewModel.publicNoticeLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            noticeList = viewModel.publicNoticeItems;
-            List<PublicNotice> recentNoticeList = noticeList.take(5).toList();
-            return SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: 10, top: 10),
-                        child: Text('총 공지사항 수: ${noticeList.length}'),
-                      ),
-                      DataTable(
-                        columnSpacing: 5,
-                        columns: const <DataColumn>[
-                          DataColumn(label: Text('제목')),
-                          DataColumn(label: Text('내용')),
-                          DataColumn(label: Text('작성시간')),
-                          DataColumn(label: Text('정렬 우선순위')),
-                        ],
-                        rows: recentNoticeList.map((PublicNotice notice) {
-                          return DataRow(
-                            cells: <DataCell>[
-                              DataCell(buildNoticeDataCell(
-                                  context, notice.title, notice)),
-                              DataCell(
-                                ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                    maxWidth: 300, // 최대 너비를 100픽셀로 제한
-                                  ),
-                                  child: buildNoticeDataCell(
-                                      context, notice.content, notice),
-                                ),
-                              ),
-                              DataCell(
-                                ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                    maxWidth: 80, // 최대 너비를 100픽셀로 제한
-                                  ),
-                                  child: buildNoticeDataCell(
-                                      context,
-                                      formatTemporalDateToMonthAndDay(
-                                          notice.createdAt.toString()),
-                                      notice),
-                                ),
-                              ),
-                              DataCell(
-                                ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                    maxWidth: 80, // 최대 너비를 100픽셀로 제한
-                                  ),
-                                  child: buildNoticeDataCell(
-                                      context, '${notice.sortNum}', notice),
-                                ),
-                              ),
-                            ],
-                          );
-                        }).toList(),
-                      ),
-                    ]));
-          }),
-          const SizedBox(height: 20),
-          const Padding(
-            padding: EdgeInsets.only(left: 10), // Add left padding
-            child: Text('게시물 현황', style: TextStyle(fontSize: 20)),
-          ),
-          Consumer<PostViewModel>(builder: (context, viewModel, child) {
-            if (viewModel.postLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            postList = viewModel.postItems;
-            List<Post> recentPostList = postList.take(5).toList();
-            return SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: 10, top: 10),
-                        child: Text('총 게시물수: ${postList.length}'),
-                      ),
-                      DataTable(
-                        columnSpacing: 5,
-                        columns: const <DataColumn>[
-                          DataColumn(label: Text('제목')),
-                          DataColumn(label: Text('내용')),
-                          DataColumn(label: Text('작성시간')),
-                          DataColumn(label: Text('메인카테고리')),
-                          DataColumn(label: Text('서브카테고리')),
-                        ],
-                        rows: recentPostList.map((Post post) {
-                          return DataRow(
-                            cells: <DataCell>[
-                              /* Title Field*/
-                              DataCell(
-                                  buildDataCell(context, post.title, post)),
-                              /* Content Field*/
-                              DataCell(
-                                  buildDataCell(context, post.content, post)),
-                              /* Created At Field*/
-                              DataCell(
-                                ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                    maxWidth: 80, // 최대 너비를 100픽셀로 제한
-                                  ),
-                                  child: buildDataCell(
-                                      context,
-                                      formatTemporalDateToMonthAndDay(
-                                          post.createdAt.toString()),
-                                      post),
-                                ),
-                              ),
-                              /* MainCategoryType Field*/
-                              DataCell(
-                                ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                    maxWidth: 90, // 최대 너비를 100픽셀로 제한
-                                  ),
-                                  child: buildDataCell(
-                                      context,
-                                      getFormattedMainCategory(
-                                          post.mainCategoryType),
-                                      post),
-                                ),
-                              ),
-                              /* SubCategoryID Field*/
-                              DataCell(
-                                ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                    maxWidth: 90, // 최대 너비를 100픽셀로 제한
-                                  ),
-                                  child: buildDataCell(
-                                      context,
-                                      getFormattedSubCategory(
-                                          post.subCategory?.id),
-                                      post),
-                                ),
-                              ),
-                            ],
-                          );
-                        }).toList(),
-                      ),
-                    ]));
-          }),
-          const SizedBox(height: 20),
-          const Padding(
-            padding: EdgeInsets.only(left: 10), // Add left padding
-            child: Text('유저목록', style: TextStyle(fontSize: 20)),
-          ),
-          Consumer<UserViewModel>(builder: (context, viewModel, child) {
-            if (viewModel.userLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            userList = viewModel.userItems;
-            List<User> recentUserList = userList.take(5).toList();
-            return SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Column(
+        ),
+        const SizedBox(height: 20),
+        const Padding(
+          padding: EdgeInsets.only(left: 10), // Add left padding
+          child: Text('공지사항', style: TextStyle(fontSize: 20)),
+        ),
+        Consumer<PublicNoticeViewModel>(builder: (context, viewModel, child) {
+          if (viewModel.publicNoticeLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          noticeList = viewModel.publicNoticeItems;
+          List<PublicNotice> recentNoticeList = noticeList.take(5).toList();
+          return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
                       padding: EdgeInsets.only(left: 10, top: 10),
-                      child: Text('총 유저수: ${userList.length}'),
+                      child: Text('총 공지사항 수: ${noticeList.length}'),
                     ),
                     DataTable(
                       columnSpacing: 5,
                       columns: const <DataColumn>[
-                        DataColumn(label: Text('유저 닉네임')),
-                        DataColumn(label: Text('전화번호')),
-                        DataColumn(label: Text('가입시기')),
-                        DataColumn(label: Text('디바이스 종류')),
+                        DataColumn(label: Text('제목')),
+                        DataColumn(label: Text('내용')),
+                        DataColumn(label: Text('작성시간')),
+                        DataColumn(label: Text('정렬 우선순위')),
                       ],
-                      rows: recentUserList.map((User user) {
+                      rows: recentNoticeList.map((PublicNotice notice) {
                         return DataRow(
                           cells: <DataCell>[
+                            DataCell(buildNoticeDataCell(
+                                context, notice.title, notice)),
                             DataCell(
                               ConstrainedBox(
                                 constraints: BoxConstraints(
-                                  maxWidth: 100, // 최대 너비를 100픽셀로 제한
+                                  maxWidth: 300, // 최대 너비를 100픽셀로 제한
                                 ),
-                                child: buildUserDataCell(
-                                    context, user.userName, user),
-                              ),
-                            ),
-                            DataCell(
-                              ConstrainedBox(
-                                constraints: BoxConstraints(
-                                  maxWidth: 120, // 최대 너비를 100픽셀로 제한
-                                ),
-                                child: buildUserDataCell(
-                                    context, user.phone, user),
+                                child: buildNoticeDataCell(
+                                    context, notice.content, notice),
                               ),
                             ),
                             DataCell(
@@ -316,11 +159,11 @@ class _DashBoardState extends State<DashBoard> {
                                 constraints: BoxConstraints(
                                   maxWidth: 80, // 최대 너비를 100픽셀로 제한
                                 ),
-                                child: buildUserDataCell(
+                                child: buildNoticeDataCell(
                                     context,
                                     formatTemporalDateToMonthAndDay(
-                                        user.createdAt.toString()),
-                                    user),
+                                        notice.createdAt.toString()),
+                                    notice),
                               ),
                             ),
                             DataCell(
@@ -328,110 +171,268 @@ class _DashBoardState extends State<DashBoard> {
                                 constraints: BoxConstraints(
                                   maxWidth: 80, // 최대 너비를 100픽셀로 제한
                                 ),
-                                child: buildUserDataCell(
-                                    context, user.devicePlatform.name, user),
+                                child: buildNoticeDataCell(
+                                    context, '${notice.sortNum}', notice),
                               ),
                             ),
                           ],
                         );
                       }).toList(),
                     ),
-                  ],
-                ));
-          }),
-          const SizedBox(height: 20),
-          const Padding(
-            padding: EdgeInsets.only(left: 10), // Add left padding
-            child: Text('사용자 신고 내역', style: TextStyle(fontSize: 20)),
-          ),
-          Consumer<ReportViewModel>(builder: (context, viewModel, child) {
-            if (viewModel.reportLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            reportList = viewModel.reportItems;
-            List<Report> recentReportList = reportList.take(5).toList();
-            return SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: 10, top: 10),
-                        child: Text('총 사용자 신고 수: ${reportList.length}'),
-                      ),
-                      DataTable(
-                        columnSpacing: 5,
-                        columns: const <DataColumn>[
-                          DataColumn(label: Text('신고종류')),
-                          DataColumn(label: Text('신고이유')),
-                          DataColumn(label: Text('신고작성시간')),
-                          DataColumn(label: Text('신고당한 유저')),
-                          DataColumn(label: Text('신고한 유저')),
+                  ]));
+        }),
+        const SizedBox(height: 20),
+        const Padding(
+          padding: EdgeInsets.only(left: 10), // Add left padding
+          child: Text('게시물 현황', style: TextStyle(fontSize: 20)),
+        ),
+        Consumer<PostViewModel>(builder: (context, viewModel, child) {
+          if (viewModel.postLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          postList = viewModel.postItems;
+          List<Post> recentPostList = postList.take(5).toList();
+          return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 10, top: 10),
+                      child: Text('총 게시물수: ${postList.length}'),
+                    ),
+                    DataTable(
+                      columnSpacing: 5,
+                      columns: const <DataColumn>[
+                        DataColumn(label: Text('제목')),
+                        DataColumn(label: Text('내용')),
+                        DataColumn(label: Text('작성시간')),
+                        DataColumn(label: Text('메인카테고리')),
+                        DataColumn(label: Text('서브카테고리')),
+                      ],
+                      rows: recentPostList.map((Post post) {
+                        return DataRow(
+                          cells: <DataCell>[
+                            /* Title Field*/
+                            DataCell(
+                                buildDataCell(context, post.title, post)),
+                            /* Content Field*/
+                            DataCell(
+                                buildDataCell(context, post.content, post)),
+                            /* Created At Field*/
+                            DataCell(
+                              ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth: 80, // 최대 너비를 100픽셀로 제한
+                                ),
+                                child: buildDataCell(
+                                    context,
+                                    formatTemporalDateToMonthAndDay(
+                                        post.createdAt.toString()),
+                                    post),
+                              ),
+                            ),
+                            /* MainCategoryType Field*/
+                            DataCell(
+                              ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth: 90, // 최대 너비를 100픽셀로 제한
+                                ),
+                                child: buildDataCell(
+                                    context,
+                                    getFormattedMainCategory(
+                                        post.mainCategoryType),
+                                    post),
+                              ),
+                            ),
+                            /* SubCategoryID Field*/
+                            DataCell(
+                              ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth: 90, // 최대 너비를 100픽셀로 제한
+                                ),
+                                child: buildDataCell(
+                                    context,
+                                    getFormattedSubCategory(
+                                        post.subCategory?.id),
+                                    post),
+                              ),
+                            ),
+                          ],
+                        );
+                      }).toList(),
+                    ),
+                  ]));
+        }),
+        const SizedBox(height: 20),
+        const Padding(
+          padding: EdgeInsets.only(left: 10), // Add left padding
+          child: Text('유저목록', style: TextStyle(fontSize: 20)),
+        ),
+        Consumer<UserViewModel>(builder: (context, viewModel, child) {
+          if (viewModel.userLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          userList = viewModel.userItems;
+          List<User> recentUserList = userList.take(5).toList();
+          return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 10, top: 10),
+                    child: Text('총 유저수: ${userList.length}'),
+                  ),
+                  DataTable(
+                    columnSpacing: 5,
+                    columns: const <DataColumn>[
+                      DataColumn(label: Text('유저 닉네임')),
+                      DataColumn(label: Text('전화번호')),
+                      DataColumn(label: Text('가입시기')),
+                      DataColumn(label: Text('디바이스 종류')),
+                    ],
+                    rows: recentUserList.map((User user) {
+                      return DataRow(
+                        cells: <DataCell>[
+                          DataCell(
+                            ConstrainedBox(
+                              constraints: BoxConstraints(
+                                maxWidth: 100, // 최대 너비를 100픽셀로 제한
+                              ),
+                              child: buildUserDataCell(
+                                  context, user.userName, user),
+                            ),
+                          ),
+                          DataCell(
+                            ConstrainedBox(
+                              constraints: BoxConstraints(
+                                maxWidth: 120, // 최대 너비를 100픽셀로 제한
+                              ),
+                              child: buildUserDataCell(
+                                  context, user.phone, user),
+                            ),
+                          ),
+                          DataCell(
+                            ConstrainedBox(
+                              constraints: BoxConstraints(
+                                maxWidth: 80, // 최대 너비를 100픽셀로 제한
+                              ),
+                              child: buildUserDataCell(
+                                  context,
+                                  formatTemporalDateToMonthAndDay(
+                                      user.createdAt.toString()),
+                                  user),
+                            ),
+                          ),
+                          DataCell(
+                            ConstrainedBox(
+                              constraints: BoxConstraints(
+                                maxWidth: 80, // 최대 너비를 100픽셀로 제한
+                              ),
+                              child: buildUserDataCell(
+                                  context, user.devicePlatform.name, user),
+                            ),
+                          ),
                         ],
-                        rows: recentReportList.map((Report reportitem) {
-                          return DataRow(
-                            cells: <DataCell>[
-                              DataCell(
-                                ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                    maxWidth: 150, // 최대 너비를 100픽셀로 제한
-                                  ),
-                                  child: buildReportDataCell(context,
-                                      reportitem.type.name, reportitem),
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ));
+        }),
+        const SizedBox(height: 20),
+        const Padding(
+          padding: EdgeInsets.only(left: 10), // Add left padding
+          child: Text('사용자 신고 내역', style: TextStyle(fontSize: 20)),
+        ),
+        Consumer<ReportViewModel>(builder: (context, viewModel, child) {
+          if (viewModel.reportLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          reportList = viewModel.reportItems;
+          List<Report> recentReportList = reportList.take(5).toList();
+          return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 10, top: 10),
+                      child: Text('총 사용자 신고 수: ${reportList.length}'),
+                    ),
+                    DataTable(
+                      columnSpacing: 5,
+                      columns: const <DataColumn>[
+                        DataColumn(label: Text('신고종류')),
+                        DataColumn(label: Text('신고이유')),
+                        DataColumn(label: Text('신고작성시간')),
+                        DataColumn(label: Text('신고당한 유저')),
+                        DataColumn(label: Text('신고한 유저')),
+                      ],
+                      rows: recentReportList.map((Report reportitem) {
+                        return DataRow(
+                          cells: <DataCell>[
+                            DataCell(
+                              ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth: 150, // 최대 너비를 100픽셀로 제한
                                 ),
+                                child: buildReportDataCell(context,
+                                    reportitem.type.name, reportitem),
                               ),
-                              DataCell(
-                                ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                    maxWidth: 240, // 최대 너비를 100픽셀로 제한
-                                  ),
-                                  child: buildReportDataCell(context,
-                                      reportitem.reason.name, reportitem),
+                            ),
+                            DataCell(
+                              ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth: 240, // 최대 너비를 100픽셀로 제한
                                 ),
+                                child: buildReportDataCell(context,
+                                    reportitem.reason.name, reportitem),
                               ),
-                              DataCell(
-                                ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                    maxWidth: 100, // 최대 너비를 100픽셀로 제한
-                                  ),
-                                  child: buildReportDataCell(
-                                      context,
-                                      formatTemporalDateToMonthAndDay(
-                                          reportitem.createdAt.toString()),
-                                      reportitem),
+                            ),
+                            DataCell(
+                              ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth: 100, // 최대 너비를 100픽셀로 제한
                                 ),
+                                child: buildReportDataCell(
+                                    context,
+                                    formatTemporalDateToMonthAndDay(
+                                        reportitem.createdAt.toString()),
+                                    reportitem),
                               ),
-                              DataCell(
-                                ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                    maxWidth: 90, // 최대 너비를 100픽셀로 제한
-                                  ),
-                                  child: buildReportDataCell(
-                                      context,
-                                      '${reportitem.reportedUser?.userName}',
-                                      reportitem),
+                            ),
+                            DataCell(
+                              ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth: 90, // 최대 너비를 100픽셀로 제한
                                 ),
+                                child: buildReportDataCell(
+                                    context,
+                                    '${reportitem.reportedUser?.userName}',
+                                    reportitem),
                               ),
-                              DataCell(
-                                ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                    maxWidth: 90, // 최대 너비를 100픽셀로 제한
-                                  ),
-                                  child: buildReportDataCell(
-                                      context,
-                                      '${reportitem.reporter?.userName}',
-                                      reportitem),
+                            ),
+                            DataCell(
+                              ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth: 90, // 최대 너비를 100픽셀로 제한
                                 ),
+                                child: buildReportDataCell(
+                                    context,
+                                    '${reportitem.reporter?.userName}',
+                                    reportitem),
                               ),
-                            ],
-                          );
-                        }).toList(),
-                      ),
-                    ]));
-          }),
-          SizedBox(height: 100),
-        ],
-      ),
+                            ),
+                          ],
+                        );
+                      }).toList(),
+                    ),
+                  ]));
+        }),
+        SizedBox(height: 100),
+      ],
     );
   }
 

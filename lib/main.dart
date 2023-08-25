@@ -146,10 +146,7 @@ class _MyHomePageState extends State<MyHomePage> {
           });
         },
       ),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: _pages[_currentIndex],
-      ),
+      body: SingleChildScrollView(child: _pages[_currentIndex]),
     );
   }
 }
