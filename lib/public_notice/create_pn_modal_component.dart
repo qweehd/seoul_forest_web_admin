@@ -2,6 +2,8 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:seoul_forest_web_admin/viewmodels/public_notice_viewmodel.dart';
 
 import '../models/ModelProvider.dart';
 
@@ -312,7 +314,7 @@ class _CreatePublicNoticeModalState extends State<CreatePublicNoticeModal> {
     );
   }
 
-  void generatePublicNoticeForCities() {
+  Future<void> generatePublicNoticeForCities() async {
     for (City city in _selectedCities) {
       _createdPublicNotices.add(_createPublicNotice(
           _titleController.text,
@@ -323,9 +325,33 @@ class _CreatePublicNoticeModalState extends State<CreatePublicNoticeModal> {
           null));
       safePrint(_createdPublicNotices.toString());
     }
+    for (PublicNotice publicNotice in _createdPublicNotices) {
+      bool result;
+      result = await Provider.of<PublicNoticeViewModel>(context, listen: false)
+          .createPublicNotice(publicNotice);
+      if (result) {
+        /*show SnackBar*/
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('공지사항이 생성되었습니다.'),
+            ),
+          );
+        }
+      } else {
+        /*show SnackBar*/
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('공지사항 생성에 실패했습니다.'),
+            ),
+          );
+        }
+      }
+    }
   }
 
-  void generatePublicNoticeForCountries() {
+  Future<void> generatePublicNoticeForCountries() async {
     for (Country country in _selectedCountries) {
       _createdPublicNotices.add(_createPublicNotice(
           _titleController.text,
@@ -335,6 +361,30 @@ class _CreatePublicNoticeModalState extends State<CreatePublicNoticeModal> {
           null,
           country));
       safePrint(_createdPublicNotices.toString());
+    }
+    for (PublicNotice publicNotice in _createdPublicNotices) {
+      bool result;
+      result = await Provider.of<PublicNoticeViewModel>(context, listen: false)
+          .createPublicNotice(publicNotice);
+      if (result) {
+        /*show SnackBar*/
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('공지사항이 생성되었습니다.'),
+            ),
+          );
+        }
+      } else {
+        /*show SnackBar*/
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('공지사항 생성에 실패했습니다.'),
+            ),
+          );
+        }
+      }
     }
   }
 

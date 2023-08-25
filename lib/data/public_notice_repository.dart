@@ -11,9 +11,7 @@ class PublicNoticeRepository {
   Future<List<PublicNotice?>> queryListItems() async {
     try {
       final request = ModelQueries.list(PublicNotice.classType);
-      final response = await Amplify.API
-          .query(request: request)
-          .response;
+      final response = await Amplify.API.query(request: request).response;
 
       final publicNoticeList = response.data?.items;
       if (publicNoticeList == null) {
@@ -38,6 +36,26 @@ class PublicNoticeRepository {
     );
     var response = await _graphQLHelper.processRequest(
         request, GraphQLHelperRequestType.mutation);
+    return response.data != null;
+  }
+
+  Future<bool> createPublicNotice(PublicNotice publicNotice) async {
+    var request = await _graphQLHelper.buildRequest(
+      document: PublicNoticeMutations.createPublicNotice,
+      variables: {
+        'cityID': publicNotice.country!.id,
+        'content': publicNotice.content,
+        'countryID': publicNotice.country!.id,
+        'nationalScope': publicNotice.nationalScope,
+        'sortNum': publicNotice.sortNum,
+        'title': publicNotice.title,
+      },
+      decodePath: 'createPublicNotice',
+      modelType: PublicNotice.classType,
+    );
+    var response = await _graphQLHelper.processRequest(
+        request, GraphQLHelperRequestType.mutation);
+
     return response.data != null;
   }
 }

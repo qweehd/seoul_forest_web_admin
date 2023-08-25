@@ -6,7 +6,8 @@ import '../models/ModelProvider.dart';
 class PublicNoticeViewModel extends ChangeNotifier {
   final PublicNoticeRepository _publicNoticeRepository;
 
-  PublicNoticeViewModel({required PublicNoticeRepository publicNoticeRepository})
+  PublicNoticeViewModel(
+      {required PublicNoticeRepository publicNoticeRepository})
       : _publicNoticeRepository = publicNoticeRepository;
 
   List<PublicNotice> _publicNoticeItems = [];
@@ -27,7 +28,8 @@ class PublicNoticeViewModel extends ChangeNotifier {
 
   Future<void> deletePublicNotice(String publicNoticeID) async {
     if (await _publicNoticeRepository.deletePublicNotice(publicNoticeID)) {
-      publicNoticeItems.removeWhere((publicNotice) => publicNotice.id == publicNoticeID);
+      publicNoticeItems
+          .removeWhere((publicNotice) => publicNotice.id == publicNoticeID);
       notifyListeners();
     } else {
       safePrint('Error deleting PublicNotice');
@@ -42,5 +44,20 @@ class PublicNoticeViewModel extends ChangeNotifier {
       }
     });
   }
-}
 
+  Future<bool> createPublicNotice(PublicNotice publicNotice) async {
+    publicNoticeLoading = true;
+    Future.microtask(() => notifyListeners());
+    if (await _publicNoticeRepository.createPublicNotice(publicNotice)) {
+      publicNoticeItems.add(publicNotice);
+      publicNoticeLoading = false;
+      Future.microtask(() => notifyListeners());
+      return true;
+    } else {
+      safePrint('Error creating PublicNotice');
+      publicNoticeLoading = false;
+      Future.microtask(() => notifyListeners());
+      return false;
+    }
+  }
+}
