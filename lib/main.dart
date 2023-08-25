@@ -83,6 +83,14 @@ class _MyHomePageState extends State<MyHomePage> {
     const ReportList()
   ];
 
+  final Map<int, String> _titles = {
+    0: '대시보드',
+    1: '공지사항 관리',
+    2: '게시글 관리',
+    3: '유저 관리',
+    4: '신고 관리'
+  };
+
   @override
   void initState() {
     super.initState();
@@ -97,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('관리자 페이지'),
+        title: Text(_titles[_currentIndex]!),
       ),
       drawer: AdminDrawer(
         onSelected: (index) {
