@@ -120,8 +120,7 @@ class _DashBoardState extends State<DashBoard> {
                     borderRadius: BorderRadius.circular(15)),
                 padding: const EdgeInsets.all(40),
                 onPressed: () {
-                  // showCreatePublicNoticeModal();
-                  context.go('/public_notice/create');
+                  showCreatePublicNoticeModal();
                 },
                 child: const Column(
                   children: [
