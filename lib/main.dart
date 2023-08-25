@@ -2,6 +2,7 @@ import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:seoul_forest_web_admin/component/drawer_component.dart';
 import 'package:seoul_forest_web_admin/data/post_repository.dart';
 import 'package:seoul_forest_web_admin/first_page.dart';
 import 'package:seoul_forest_web_admin/post_list.dart';
@@ -26,8 +27,8 @@ void main() async {
       ChangeNotifierProvider(
           create: (context) => PostViewModel(postRepository: PostRepository())),
       ChangeNotifierProvider(
-          create: (context) =>
-              PublicNoticeViewModel(publicNoticeRepository: PublicNoticeRepository())),
+          create: (context) => PublicNoticeViewModel(
+              publicNoticeRepository: PublicNoticeRepository())),
       ChangeNotifierProvider(
           create: (context) => UserViewModel(userRepository: UserRepository())),
       ChangeNotifierProvider(
@@ -86,7 +87,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     Provider.of<PostViewModel>(context, listen: false).queryPostItems();
-    Provider.of<PublicNoticeViewModel>(context, listen: false).queryNoticeItems();
+    Provider.of<PublicNoticeViewModel>(context, listen: false)
+        .queryNoticeItems();
     Provider.of<UserViewModel>(context, listen: false).queryUserItems();
     Provider.of<ReportViewModel>(context, listen: false).queryReportItems();
   }
@@ -96,105 +98,13 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('관리자 페이지'),
-        actions: <Widget>[
-          TextButton(
-            child: const Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.arrow_back, color: Colors.white),
-                Text('돌아가기', style: TextStyle(color: Colors.white)),
-              ],
-            ),
-            onPressed: () {
-              if (_currentIndex != 0) {
-                setState(() {
-                  _currentIndex = 0;
-                });
-              } else {
-                Navigator.of(context).maybePop();
-              }
-            },
-          ),
-        ],
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            InkWell(
-              onTap: () {
-                // DrawerHeader를 눌렀을 때 FirstPage로 이동하는 코드
-                setState(() {
-                  _currentIndex = 0;
-                });
-                Navigator.of(context).pop(); // Drawer를 닫음
-              },
-              child: const DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                ),
-                child: Text(
-                  '서울숲',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            ListTile(
-              leading: const Icon(Icons.announcement),
-              title: const Text('대시보드'),
-              onTap: () {
-                setState(() {
-                  _currentIndex = 0;
-                });
-                Navigator.of(context).pop();
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.announcement),
-              title: const Text('공지사항'),
-              onTap: () {
-                setState(() {
-                  _currentIndex = 1;
-                });
-                Navigator.of(context).pop();
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.manage_accounts),
-              title: const Text('게시물관리'),
-              onTap: () {
-                setState(() {
-                  _currentIndex = 2;
-                });
-                Navigator.of(context).pop();
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.supervised_user_circle),
-              title: const Text('사용자관리'),
-              onTap: () {
-                setState(() {
-                  _currentIndex = 3;
-                });
-                Navigator.of(context).pop();
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.report_problem),
-              title: const Text('사용자신고관리'),
-              onTap: () {
-                setState(() {
-                  _currentIndex = 4;
-                });
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        ),
+      drawer: AdminDrawer(
+        onSelected: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
