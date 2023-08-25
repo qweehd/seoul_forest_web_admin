@@ -8,16 +8,16 @@ import 'viewmodels/post_viewmodel.dart';
 import 'package:intl/intl.dart';
 
 
-class FirstPage extends StatefulWidget {
-  const FirstPage({
+class DashBoard extends StatefulWidget {
+  const DashBoard({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<FirstPage> createState() => _FirstPageState();
+  State<DashBoard> createState() => _DashBoardState();
 }
 
-class _FirstPageState extends State<FirstPage> {
+class _DashBoardState extends State<DashBoard> {
   late List<Post> postList;
   late List<PublicNotice> noticeList;
   late List<User> userList;

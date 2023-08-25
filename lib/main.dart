@@ -75,7 +75,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
   final _pages = [
-    FirstPage(),
+    const DashBoard(),
     const PublicNoticeList(),
     const PostList(),
     const UserList(),
@@ -143,6 +143,16 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             const SizedBox(height: 10),
+            ListTile(
+              leading: const Icon(Icons.announcement),
+              title: const Text('대시보드'),
+              onTap: () {
+                setState(() {
+                  _currentIndex = 0;
+                });
+                Navigator.of(context).pop();
+              },
+            ),
             ListTile(
               leading: const Icon(Icons.announcement),
               title: const Text('공지사항'),
