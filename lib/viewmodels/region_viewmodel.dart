@@ -22,6 +22,7 @@ class RegionViewModel extends ChangeNotifier {
     try {
       final countryList = await _regionRepository.fetchAllCountries();
       _countryItems = countryList;
+      safePrint(countryList);
     } catch (e) {
       safePrint(e);
 

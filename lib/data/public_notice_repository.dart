@@ -43,7 +43,7 @@ class PublicNoticeRepository {
     var request = await _graphQLHelper.buildRequest(
       document: PublicNoticeMutations.createPublicNotice,
       variables: {
-        'cityID': publicNotice.country!.id,
+        'cityID': publicNotice.city!.id,
         'content': publicNotice.content,
         'countryID': publicNotice.country!.id,
         'nationalScope': publicNotice.nationalScope,

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:seoul_forest_web_admin/viewmodels/public_notice_viewmodel.dart';
+import 'package:seoul_forest_web_admin/viewmodels/region_viewmodel.dart';
 
 import '../models/ModelProvider.dart';
 
@@ -16,10 +17,10 @@ class CreatePublicNoticeModal extends StatefulWidget {
 }
 
 class _CreatePublicNoticeModalState extends State<CreatePublicNoticeModal> {
+  late RegionViewModel _regionViewModel;
+
   bool nationalScope = true;
   late List<Country> _countries;
-  late List<City> _citiesInGermany;
-  late List<City> _citiesInVietnam;
 
   final List<Country> _selectedCountries = [];
   final List<City> _selectedCities = [];
@@ -29,8 +30,13 @@ class _CreatePublicNoticeModalState extends State<CreatePublicNoticeModal> {
   final TextEditingController _contentController = TextEditingController();
   final TextEditingController _sortNumController = TextEditingController();
 
-  PublicNotice _createPublicNotice(String title, String content, int sortNum,
-      bool nationalScope, City? city, Country? country) {
+  PublicNotice _createPublicNotice(
+      {required String title,
+      required String content,
+      required int sortNum,
+      required bool nationalScope,
+      required City city,
+      required Country country}) {
     return PublicNotice(
       title: title,
       content: content,
@@ -45,14 +51,8 @@ class _CreatePublicNoticeModalState extends State<CreatePublicNoticeModal> {
   @override
   void initState() {
     super.initState();
-    _citiesInGermany =
-        List<City>.generate(5, (index) => _createCity('Germany', index));
-    _citiesInVietnam =
-        List<City>.generate(4, (index) => _createCity('Vietnam', index));
-    _countries = [
-      _createCountry('Germany', _citiesInGermany, 0),
-      _createCountry('Vietnam', _citiesInVietnam, 1)
-    ];
+    _regionViewModel = Provider.of<RegionViewModel>(context, listen: false);
+    _countries = _regionViewModel.countryItems;
   }
 
   void onSelectedCountry(Country country) {
@@ -63,52 +63,6 @@ class _CreatePublicNoticeModalState extends State<CreatePublicNoticeModal> {
         _selectedCountries.add(country);
       }
     });
-  }
-
-  Country _createCountry(String name, List<City> cities, int index) {
-    List<String> names = ['독일', '베트남'];
-    List<String> codes = ['49', '84'];
-    List<String> emojis = ['🇩🇪', '🇻🇳'];
-    List<String> currencies = ['유로', '동'];
-    List<String> currencyCodes = ['EUR', 'VND'];
-    List<String> dialCodes = ['+49', '+84'];
-
-    return Country(
-        name: names[index],
-        code: codes[index],
-        flagEmoji: emojis[index],
-        cities: cities,
-        currency: currencies[index],
-        currencyCode: currencyCodes[index],
-        dialCode: dialCodes[index]);
-  }
-
-  City _createCity(String country, int index) {
-    List<String> names = country == 'Germany'
-        ? ['베를린', '뮌헨', '프랑크푸르트', '쾰른', '하노버']
-        : ['하노이', '호치민', '다낭', '나트랑'];
-    List<String> states = country == 'Germany'
-        ? ['브란덴부르크', '바이에른', '헤센', '노르트라인-베스트팔렌', '하노버']
-        : ['하노이', '호치민', '다낭', '나트랑'];
-
-    return City(
-        name: names[index],
-        state: states[index],
-        latitude: 20.12313,
-        longitude: 93.2331,
-        imageKey: '',
-        hasMainCategories: [MainCategoryType.COMMUNITY]);
-  }
-
-  Widget _createChip(Country country) {
-    return Chip(
-        label: Text(country.name),
-        onDeleted: () {
-          setState(() {
-            _countries.add(country);
-            _selectedCountries.remove(country);
-          });
-        });
   }
 
   PreferredSizeWidget _createAppBar() {
@@ -295,98 +249,64 @@ class _CreatePublicNoticeModalState extends State<CreatePublicNoticeModal> {
             ),
           ),
           const SizedBox(height: 20),
-          MaterialButton(
-            minWidth: MediaQuery.of(context).size.width - 40,
-            height: 50,
-            color: Colors.blue,
-            onPressed: () {
-              /*publicNotice를 생성하고 확인하는 화면 표시 */
-              if (nationalScope) {
-                generatePublicNoticeForCountries();
-              } else {
-                generatePublicNoticeForCities();
-              }
-            },
-            child: const Text('입력'),
-          ),
+          createMaterialButton(context, nationalScope),
         ],
       ),
     );
   }
 
-  Future<void> generatePublicNoticeForCities() async {
-    for (City city in _selectedCities) {
+// MaterialButton을 생성하는 별도의 함수
+  Widget createMaterialButton(BuildContext context, bool nationalScope) {
+    return MaterialButton(
+      minWidth: MediaQuery.of(context).size.width - 40,
+      height: 50,
+      color: Colors.blue,
+      onPressed: () {
+        generatePublicNotice(nationalScope);
+      },
+      child: const Text('입력'),
+    );
+  }
+
+// 공지사항을 생성하는 함수 (국가 또는 도시에 따라)
+  Future<void> generatePublicNotice(bool nationalScope) async {
+    List<dynamic> selectedRegions =
+        nationalScope ? _selectedCountries : _selectedCities;
+
+    for (var region in selectedRegions) {
       _createdPublicNotices.add(_createPublicNotice(
-          _titleController.text,
-          _contentController.text,
-          int.parse(_sortNumController.text),
-          nationalScope,
-          city,
-          null));
-      safePrint(_createdPublicNotices.toString());
+          title: _titleController.text,
+          content: _contentController.text,
+          sortNum: int.parse(_sortNumController.text),
+          nationalScope: nationalScope,
+          city: nationalScope ? null : region,
+          country: nationalScope ? region : null));
     }
-    for (PublicNotice publicNotice in _createdPublicNotices) {
-      bool result;
-      result = await Provider.of<PublicNoticeViewModel>(context, listen: false)
-          .createPublicNotice(publicNotice);
-      if (result) {
-        /*show SnackBar*/
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('공지사항이 생성되었습니다.'),
-            ),
-          );
-        }
-      } else {
-        /*show SnackBar*/
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('공지사항 생성에 실패했습니다.'),
-            ),
-          );
-        }
-      }
+
+    await createPublicNotices(_createdPublicNotices);
+  }
+
+// PublicNotice 객체를 생성하고 SnackBar를 출력하는 함수
+  Future<void> createPublicNotices(List<PublicNotice> notices) async {
+    for (PublicNotice notice in notices) {
+      bool result =
+          await Provider.of<PublicNoticeViewModel>(context, listen: false)
+              .createPublicNotice(notice);
+      String message = result ? '공지사항이 생성되었습니다.' : '공지사항 생성에 실패했습니다.';
+      showSnackBar(context, message);
     }
   }
 
-  Future<void> generatePublicNoticeForCountries() async {
-    for (Country country in _selectedCountries) {
-      _createdPublicNotices.add(_createPublicNotice(
-          _titleController.text,
-          _contentController.text,
-          int.parse(_sortNumController.text),
-          nationalScope,
-          null,
-          country));
-      safePrint(_createdPublicNotices.toString());
-    }
-    for (PublicNotice publicNotice in _createdPublicNotices) {
-      bool result;
-      result = await Provider.of<PublicNoticeViewModel>(context, listen: false)
-          .createPublicNotice(publicNotice);
-      if (result) {
-        /*show SnackBar*/
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('공지사항이 생성되었습니다.'),
-            ),
-          );
-        }
-      } else {
-        /*show SnackBar*/
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('공지사항 생성에 실패했습니다.'),
-            ),
-          );
-        }
-      }
+// SnackBar 출력을 위한 별도의 함수
+  Future<void> showSnackBar(BuildContext context, String message) async {
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
     }
   }
+
+// UI 부분에서는 이렇게 사용
 
   @override
   Widget build(BuildContext context) {
@@ -395,4 +315,11 @@ class _CreatePublicNoticeModalState extends State<CreatePublicNoticeModal> {
       body: SingleChildScrollView(child: _createBody()),
     );
   }
+}
+
+class RequestResult {
+  final bool result;
+  final String message;
+
+  RequestResult(this.result, this.message);
 }
