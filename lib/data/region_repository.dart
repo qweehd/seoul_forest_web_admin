@@ -1,3 +1,4 @@
+import 'package:amplify_api/amplify_api.dart';
 import 'package:seoul_forest_web_admin/data/graphQL_helper/graphQL_helper.dart';
 import 'package:seoul_forest_web_admin/data/region_queries.dart';
 
@@ -7,10 +8,10 @@ class RegionRepository {
   final GraphQLHelper _graphQLHelper = GraphQLHelper();
 
   Future<List<Country>> fetchAllCountries() async {
-    var request = await _graphQLHelper.buildRequest(
+    var request = await _graphQLHelper.buildRequest<PaginatedResult<Country>>(
       document: RegionQueries.getAllCountries,
       decodePath: 'listCountries',
-      modelType: Country.classType,
+      modelType: const PaginatedModelType(Country.classType),
       variables: {},
     );
 
@@ -20,9 +21,11 @@ class RegionRepository {
     List<Country> countryList = [];
 
     if (response.data != null) {
-      countryList = response.data['items']
-          .map<Country>((e) => Country.fromJson(e))
-          .toList();
+      for (var item in response.data!.items) {
+        if (item != null) {
+          countryList.add(item);
+        }
+      }
     }
 
     return countryList;

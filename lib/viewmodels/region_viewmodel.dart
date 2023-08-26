@@ -1,3 +1,4 @@
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:seoul_forest_web_admin/data/region_repository.dart';
 
@@ -18,8 +19,13 @@ class RegionViewModel extends ChangeNotifier {
   Future<void> queryCountryItems() async {
     countryLoading = true;
     Future.microtask(() => notifyListeners());
-    final countryList = await _regionRepository.fetchAllCountries();
-    _countryItems = countryList;
+    try {
+      final countryList = await _regionRepository.fetchAllCountries();
+      _countryItems = countryList;
+    } catch (e) {
+      safePrint(e);
+
+    }
     countryLoading = false;
     Future.microtask(() => notifyListeners());
   }
