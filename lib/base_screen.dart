@@ -11,7 +11,7 @@ import 'package:seoul_forest_web_admin/viewmodels/report_viewmodel.dart';
 import 'package:seoul_forest_web_admin/viewmodels/user_viewmodel.dart';
 
 import 'component/drawer_component.dart';
-import 'first_page.dart';
+import 'view/dashboard/dashboard_screen.dart';
 
 class BaseScreen extends StatefulWidget {
   const BaseScreen({super.key});

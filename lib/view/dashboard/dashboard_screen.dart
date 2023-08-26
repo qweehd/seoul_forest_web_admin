@@ -6,8 +6,8 @@ import 'package:seoul_forest_web_admin/public_notice/create_pn_modal_component.d
 import 'package:seoul_forest_web_admin/viewmodels/public_notice_viewmodel.dart';
 import 'package:seoul_forest_web_admin/viewmodels/report_viewmodel.dart';
 import 'package:seoul_forest_web_admin/viewmodels/user_viewmodel.dart';
-import 'models/ModelProvider.dart';
-import 'viewmodels/post_viewmodel.dart';
+import '../../models/ModelProvider.dart';
+import '../../viewmodels/post_viewmodel.dart';
 
 class DashBoard extends StatefulWidget {
   const DashBoard({
@@ -120,7 +120,8 @@ class _DashBoardState extends State<DashBoard> {
                     borderRadius: BorderRadius.circular(15)),
                 padding: const EdgeInsets.all(40),
                 onPressed: () {
-                  showCreatePublicNoticeModal();
+                  // showCreatePublicNoticeModal();
+                  context.go('/public_notice/create');
                 },
                 child: const Column(
                   children: [
